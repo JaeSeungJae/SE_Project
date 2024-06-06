@@ -8,6 +8,7 @@ import com.hc.demo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -67,9 +68,18 @@ public class FirstController {
         return jo.toString();
     }
 
-//    @PostMapping("/rest/registerMember")
-//    public String registerMember(HttpServletRequest req) {
-//        JsonObject jo = new JsonObject();
-//    }
+    @PostMapping("/rest/registerMember")
+    public String registerMember(HttpServletRequest req, @RequestBody HashMap<String,Object> body) {
+        JsonObject jo = new JsonObject();
+        try {
+            userModel.registerUser((String) body.get("id"), (String) body.get("pw"), (String) body.get("name"), (String) body.get("nickname"));
+            jo.addProperty("res", "success");
+        }
+        catch(DataAccessException e) { // sql문 오류 시 예외 처리
+            System.out.println(e.getMessage());
+            jo.addProperty("res", "failed");
+        }
+        return jo.toString();
+    }
 
 }

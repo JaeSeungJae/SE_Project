@@ -15,7 +15,25 @@
             member
         WHERE
             ID = #{ID} AND
-            PW = #{PW}
+            PW = sha2(#{PW},256)
 <!--            password = sha2(#{password},256)-->
     </select>
+    <insert id="registerUserInfo" parameterType="com.hc.demo.container.User">
+        INSERT INTO member
+        (
+        <trim suffixOverrides=",">
+            ID,
+            PW,
+            Name,
+            Nickname,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{ID},
+            sha2(#{PW},256),
+            #{Name},
+            #{Nickname}
+        </trim>
+        )
+    </insert>
 </mapper>

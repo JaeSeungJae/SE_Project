@@ -19,5 +19,8 @@ public class UserService implements UserDao {
         return userDao.getUserLogin(ID, PW);
     }
 
-
+    @Override
+    public int registerUserInfo(String ID, String PW, String Name, String Nickname) {
+        return userDao.registerUserInfo(ID, PW, Name, Nickname);
+    }
 }

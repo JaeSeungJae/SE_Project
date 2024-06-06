@@ -27,4 +27,8 @@ public class UserModel {
         return user;
     }
 
+    public int registerUser(String ID, String PW, String Name, String Nickname) {
+        return userService.registerUserInfo(ID, PW, Name, Nickname);
+    }
+
 }
