@@ -20,5 +20,9 @@ public class User {
     public String getID() {
         return ID;
     }
+
+    public String getNickname() {
+        return Nickname;
+    }
 }
 

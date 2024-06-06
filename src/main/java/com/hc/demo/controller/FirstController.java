@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class FirstController {
     @Autowired
     UserModel userModel;
-    @GetMapping("/")
+    @GetMapping("/rest/getUserInfo")
     public String firstcont(HttpServletRequest req) {
         HttpSession hs = req.getSession();
         JsonObject jo = new JsonObject();
@@ -24,38 +24,52 @@ public class FirstController {
         if(hs!=null && hs.getAttribute("Logged") != null && (Boolean)hs.getAttribute("Logged") == true) {
             JsonObject jo2 = new JsonObject();
             User user = (User)hs.getAttribute("User");
-            jo2.addProperty("username",user.getName());
             jo2.addProperty("id",user.getID());
+            jo2.addProperty("name",user.getName());
+            jo2.addProperty("nickname",user.getNickname());
             jo.addProperty("logged",true);
-            jo.add("userinfo",jo2);
+            jo.add("data",jo2);
+        }
+        else {
+            jo.addProperty("logged", false);
         }
 
-        jo.addProperty("res","success");
         return jo.toString();
     }
 
-    @PostMapping("/login")
+    @PostMapping("/rest/login")
     public String login(HttpServletRequest req, @RequestBody HashMap<String,Object> body) {
-        HttpSession hs = req.getSession(true);
+        HttpSession hs = req.getSession(true); // 사용자 세션정보 조회 (없으면 새로운 세션 생성)
         JsonObject jo = new JsonObject();
-        if(userModel.loginUser((String)body.get("id"),(String)body.get("password"),hs) != null)
+        if(userModel.loginUser((String)body.get("id"),(String)body.get("pw"),hs) != null) // id 유효성 체크
             jo.addProperty("res","success");
         else
             jo.addProperty("res","failed");
 
-        return jo.toString();
+        return jo.toString(); // 로그인 성공여부 반환
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/rest/logout")
     public String logout(HttpServletRequest req) {
-        HttpSession hs = req.getSession();
+        HttpSession hs = req.getSession(); // 세션 정보 조회 (기존 세션이 없으면 새로 생성)
         JsonObject jo = new JsonObject();
 
-        hs.invalidate();
-        jo.addProperty("res","success");
+        try{
+            hs.invalidate(); // 세션 만료처리 (세션에 저장된 정보 삭제)
+            jo.addProperty("res","success");  // 로그아웃 처리 결과 리턴
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("res","failed");  // 로그아웃 처리 결과 리턴
+        }
+
+//        jo.addProperty("res","success");  // 로그아웃 처리 결과 리턴
         return jo.toString();
     }
 
-
+//    @PostMapping("/rest/registerMember")
+//    public String registerMember(HttpServletRequest req) {
+//        JsonObject jo = new JsonObject();
+//    }
 
 }
