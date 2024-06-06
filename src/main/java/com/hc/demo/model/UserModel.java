@@ -14,10 +14,6 @@ public class UserModel {
 
     public User getUser() {
         User user = userService.getUser();
-        if(user.getUsername().equals("피까츄"))
-        {
-            user.setUsername("피카츄");
-        }
         //전처리 또는 로직
         return user;
     }

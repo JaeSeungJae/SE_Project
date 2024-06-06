@@ -4,17 +4,18 @@
 <mapper namespace="com.hc.demo.dao.UserDao">
     <select id="getUser" resultType="com.hc.demo.container.User">
         SELECT
-            id,username,password,firstName,lastName, age, salary
+            uid, ID, PW, Name, Nickname, `reserved KRW`
         FROM
-            users
+            member
     </select>
     <select id="getUserLogin" resultType="com.hc.demo.container.User">
         SELECT
-            id,username,password,firstName,lastName, age, salary
+            uid, ID, PW, Name, Nickname, `reserved KRW`
         FROM
-            users
+            member
         WHERE
-            id = #{id} AND
-            password = sha2(#{password},256)
+            ID = #{ID} AND
+            PW = #{PW}
+<!--            password = sha2(#{password},256)-->
     </select>
 </mapper>

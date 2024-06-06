@@ -13,5 +13,7 @@ public class User {
         this.reservedKRW = reservedKRW;
     }
 
+
+
 }
 
