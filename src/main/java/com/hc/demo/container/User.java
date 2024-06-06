@@ -13,7 +13,12 @@ public class User {
         this.reservedKRW = reservedKRW;
     }
 
+    public String getName() {
+        return this.Name;
+    }
 
-
+    public String getID() {
+        return ID;
+    }
 }
 

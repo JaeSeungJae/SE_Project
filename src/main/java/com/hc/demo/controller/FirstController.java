@@ -24,8 +24,8 @@ public class FirstController {
         if(hs!=null && hs.getAttribute("Logged") != null && (Boolean)hs.getAttribute("Logged") == true) {
             JsonObject jo2 = new JsonObject();
             User user = (User)hs.getAttribute("User");
-            jo2.addProperty("username",user.getUsername());
-            jo2.addProperty("id",user.getId());
+            jo2.addProperty("username",user.getName());
+            jo2.addProperty("id",user.getID());
             jo.addProperty("logged",true);
             jo.add("userinfo",jo2);
         }
