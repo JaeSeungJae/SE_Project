@@ -15,8 +15,8 @@ public class UserService implements UserDao {
         return userDao.getUser();
     }
     @Override
-    public User getUserLogin(String id, String password) {
-        return userDao.getUserLogin(id, password);
+    public User getUserLogin(String ID, String PW) {
+        return userDao.getUserLogin(ID, PW);
     }
 
 

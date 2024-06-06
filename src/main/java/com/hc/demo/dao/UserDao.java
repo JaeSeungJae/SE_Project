@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserDao {
     User getUser();
-    User getUserLogin(String id, String password);
+    User getUserLogin(String ID, String PW);
 }
