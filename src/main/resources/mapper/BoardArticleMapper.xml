@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hc.demo.dao.BoardArticleDao">
+    <select id="getBoardArticleList" resultType="HashMap">
+        SELECT
+            b.name, a.uid, a.title, m.Nickname, a.created_date, a.hits
+        FROM
+            article as a
+        JOIN
+            board as b
+        ON
+            a.board_uid = b.uid
+        JOIN
+            member as m
+        ON
+            a.member_uid = m.uid
+        <if test="board_uid > 0">
+            WHERE
+            a.board_uid = #{board_uid}
+        </if>
+        ORDER BY
+        uid DESC
+        Limit 0, 1000
+    </select>
+</mapper>
