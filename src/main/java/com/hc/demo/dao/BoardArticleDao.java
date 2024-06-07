@@ -1,6 +1,7 @@
 package com.hc.demo.dao;
 
 import com.hc.demo.container.Article;
+import com.hc.demo.container.Comment;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
@@ -22,4 +23,9 @@ public interface BoardArticleDao {
 
     int writeArticle(int uid, int board_uid, String title, String content);
 
+    int DeleteArticle(int article_uid);
+
+    Comment getComment(int comment_uid);
+
+    int DeleteComment(int comment_uid);
 }

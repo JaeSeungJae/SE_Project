@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.hc.demo.container.Article;
 import com.hc.demo.container.Pair;
 import com.hc.demo.container.User;
+import com.hc.demo.container.Comment;
 import com.hc.demo.model.BoardArticleModel;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -135,6 +136,56 @@ public class BoardArticleController {
         return jo.toString();
     }
 
+    @PostMapping("/rest/deleteArticle")
+    public String deleteArticle(HttpServletRequest req, @RequestBody HashMap<String,Object> body)
+    {
+        HttpSession hs = req.getSession();
+        JsonObject jo = new JsonObject();
+        User user = (User)hs.getAttribute("User");
+        Article article = boardArticleModel.getArticle((int)body.get("article_uid"));
+        try {
+            if(article!=null && article.getMember_uid()==user.getUid())
+            {
+                boardArticleModel.DeleteArticle(article.getUid());
+                jo.addProperty("result","success");
+            }
+            else
+            {
+                jo.addProperty("result", "failed");
+            }
+            return jo.toString();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+//            jo.add("data", ja);
+            return jo.toString();
+        }
+    }
 
+    @PostMapping("/rest/deleteComment")
+    public String deleteComment(HttpServletRequest req, @RequestBody HashMap<String,Object> body)
+    {
+        HttpSession hs = req.getSession();
+        JsonObject jo = new JsonObject();
+        User user = (User)hs.getAttribute("User");
+        Comment comment = boardArticleModel.getComment((int)body.get("cmt_uid"));
+        try {
+            if(comment!=null && comment.getUser_uid()==user.getUid())
+            {
+                boardArticleModel.DeleteComment(comment.getUid());
+                jo.addProperty("result","success");
+            }
+            else
+            {
+                jo.addProperty("result", "failed");
+            }
+            return jo.toString();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+//            jo.add("data", ja);
+            return jo.toString();
+        }
+    }
 
 }

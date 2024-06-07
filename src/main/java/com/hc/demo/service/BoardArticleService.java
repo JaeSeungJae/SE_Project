@@ -1,6 +1,7 @@
 package com.hc.demo.service;
 
 import com.hc.demo.container.Article;
+import com.hc.demo.container.Comment;
 import com.hc.demo.dao.BoardArticleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,20 @@ public class BoardArticleService implements BoardArticleDao {
     public int writeArticle(int uid, int board_uid, String title, String content) {
         return boardArticleDao.writeArticle(uid, board_uid,title,content);
 
+    }
+
+    @Override
+    public int DeleteArticle(int article_uid) {
+        return boardArticleDao.DeleteArticle(article_uid);
+    }
+
+    @Override
+    public Comment getComment(int comment_uid) {
+        return boardArticleDao.getComment(comment_uid);
+    }
+
+    @Override
+    public int DeleteComment(int comment_uid) {
+        return boardArticleDao.DeleteComment(comment_uid);
     }
 }

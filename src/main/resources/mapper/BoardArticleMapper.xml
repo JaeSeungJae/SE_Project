@@ -84,4 +84,26 @@
         VALUES
             (#{uid}, #{board_uid}, #{title}, #{content})
     </insert>
+    <delete id="DeleteArticle" parameterType="com.hc.demo.container.Article">
+        DELETE
+        FROM
+            Article
+        WHERE
+            uid = #{article_uid}
+    </delete>
+    <select id="getComment" resultType="com.hc.demo.container.Comment">
+        SELECT
+            uid, article_uid, member_uid, comment, created_date
+        FROM
+            Comment
+        WHERE
+            uid = #{comment_uid}
+    </select>
+    <delete id="DeleteComment" parameterType="com.hc.demo.container.Comment">
+        DELETE
+        FROM
+            Comment
+        WHERE
+            uid = #{comment_uid}
+    </delete>
 </mapper>

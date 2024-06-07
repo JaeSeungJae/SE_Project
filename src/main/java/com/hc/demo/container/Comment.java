@@ -15,4 +15,12 @@ public class Comment {
         this.comment = comment;
         this.created_date = created_date;
     }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public int getUser_uid() {
+        return user_uid;
+    }
 }
