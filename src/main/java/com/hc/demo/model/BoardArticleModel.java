@@ -2,6 +2,7 @@ package com.hc.demo.model;
 
 
 import com.hc.demo.container.Article;
+import com.hc.demo.container.Comment;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -76,6 +77,18 @@ public class BoardArticleModel {
 
     }
 
+
+    public int DeleteArticle(int article_uid) {
+        return boardArticleService.DeleteArticle(article_uid);
+    }
+
+    public Comment getComment(int comment_uid) {
+        return boardArticleService.getComment(comment_uid);
+    }
+
+    public int DeleteComment(int comment_uid) {
+        return boardArticleService.DeleteComment(comment_uid);
+
     public int writeComment(int uid, int article_uid, String comment) {
         return boardArticleService.writeComment(uid, article_uid, comment);
     }
@@ -86,5 +99,6 @@ public class BoardArticleModel {
 
     public int updateComment(int uid, String comment) {
         return boardArticleService.updateComment(uid, comment);
+
     }
 }

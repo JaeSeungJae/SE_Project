@@ -23,6 +23,13 @@ public interface BoardArticleDao {
 
     int writeArticle(int uid, int board_uid, String title, String content);
 
+
+    int DeleteArticle(int article_uid);
+
+    Comment getComment(int comment_uid);
+
+    int DeleteComment(int comment_uid);
+
     int writeComment(int uid, int article_uid, String comment);
 
     Comment getComment(int comment_uid);

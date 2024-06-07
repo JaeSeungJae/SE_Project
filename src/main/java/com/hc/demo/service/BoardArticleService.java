@@ -63,4 +63,19 @@ public class BoardArticleService implements BoardArticleDao {
     public int updateComment(int uid, String comment) {
         return boardArticleDao.updateComment(uid, comment);
     }
+
+    @Override
+    public int DeleteArticle(int article_uid) {
+        return boardArticleDao.DeleteArticle(article_uid);
+    }
+
+    @Override
+    public Comment getComment(int comment_uid) {
+        return boardArticleDao.getComment(comment_uid);
+    }
+
+    @Override
+    public int DeleteComment(int comment_uid) {
+        return boardArticleDao.DeleteComment(comment_uid);
+    }
 }

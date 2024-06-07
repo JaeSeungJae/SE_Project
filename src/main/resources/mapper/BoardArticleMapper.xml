@@ -85,12 +85,22 @@
             (#{uid}, #{board_uid}, #{title}, #{content})
     </insert>
 
+    <delete id="DeleteArticle" parameterType="com.hc.demo.container.Article">
+        DELETE
+        FROM
+            Article
+        WHERE
+            uid = #{article_uid}
+    </delete>
+
+
     <insert id="writeComment">
         INSERT INTO Comment
         (member_uid, article_uid, comment)
         VALUES
         (#{uid}, #{article_uid}, #{comment})
     </insert>
+
 
     <select id="getComment" resultType="com.hc.demo.container.Comment">
         SELECT
@@ -101,6 +111,15 @@
             uid = #{comment_uid}
     </select>
 
+    <delete id="DeleteComment" parameterType="com.hc.demo.container.Comment">
+        DELETE
+        FROM
+            Comment
+        WHERE
+            uid = #{comment_uid}
+    </delete>
+
+
     <update id="updateComment">
         UPDATE
             Comment
@@ -109,4 +128,5 @@
         WHERE
             uid = #{uid}
     </update>
+
 </mapper>
