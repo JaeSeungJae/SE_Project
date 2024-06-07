@@ -82,4 +82,51 @@ public class FirstController {
         return jo.toString();
     }
 
+    @PostMapping("/rest/deleteMember")
+    public String deleteMember(HttpServletRequest req) {
+        HttpSession hs = req.getSession(); // 세션 정보 조회 (기존 세션이 없으면 새로 생성)
+        JsonObject jo = new JsonObject();
+        try {
+            if(hs!=null && hs.getAttribute("Logged") != null && (Boolean)hs.getAttribute("Logged")) {
+                User user = (User)hs.getAttribute("User");
+                userModel.deleteUser(user.getUid());
+                hs.invalidate(); // 세션 만료처리 (세션에 저장된 정보 삭제)
+                jo.addProperty("result","success");
+            }
+            else {
+                jo.addProperty("result", "failed");
+            }
+        }
+        catch(DataAccessException e) { // sql문 오류 시 예외 처리
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+        }
+        return jo.toString();
+    }
+
+    @PostMapping("/rest/modifyMemberInfo")
+    public String modifyMember(HttpServletRequest req, @RequestBody HashMap<String,Object> body) {
+        HttpSession hs = req.getSession(); // 세션 정보 조회 (기존 세션이 없으면 새로 생성)
+        JsonObject jo = new JsonObject();
+        try {
+            if(hs!=null && hs.getAttribute("Logged") != null && (Boolean)hs.getAttribute("Logged")) {
+                User user = (User)hs.getAttribute("User");
+                userModel.modifyUser(user.getUid(), (String) body.get("pw"), (String) body.get("name"), (String) body.get("nickname"));
+                jo.addProperty("result","success");
+            }
+            else {
+                jo.addProperty("result", "failed");
+            }
+        }
+        catch(DataAccessException e) { // sql문 오류 시 예외 처리
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+        }
+        return jo.toString();
+    }
+
 }
+
+
+
+

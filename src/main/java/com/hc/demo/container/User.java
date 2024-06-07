@@ -1,6 +1,8 @@
 package com.hc.demo.container;
 
 public class User {
+
+
     private int uid, reservedKRW;
     private String ID, PW, Name, Nickname;
 
@@ -23,6 +25,9 @@ public class User {
 
     public String getNickname() {
         return Nickname;
+    }
+    public int getUid() {
+        return uid;
     }
 }
 
