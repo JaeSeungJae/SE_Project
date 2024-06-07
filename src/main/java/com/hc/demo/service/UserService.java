@@ -23,4 +23,14 @@ public class UserService implements UserDao {
     public int registerUserInfo(String ID, String PW, String Name, String Nickname) {
         return userDao.registerUserInfo(ID, PW, Name, Nickname);
     }
+
+    @Override
+    public int deleteUserInfo(int UID) {
+        return userDao.deleteUserInfo(UID);
+    }
+
+    @Override
+    public int modifyUserInfo(int UID, String PW, String Name, String Nickname) {
+        return userDao.modifyUserInfo(UID, PW, Name, Nickname);
+    }
 }

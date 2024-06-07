@@ -36,4 +36,21 @@
         </trim>
         )
     </insert>
+    <delete id="deleteUserInfo" parameterType="com.hc.demo.container.User">
+        DELETE
+        FROM
+            Member
+        WHERE
+            uid = #{uid}
+    </delete>
+    <update id="modifyUserInfo" parameterType="com.hc.demo.container.User">
+        UPDATE
+            Member
+        SET
+            pw = sha2(#{PW},256),
+            name = #{Name},
+            nickname = #{Nickname}
+        WHERE
+            uid = #{uid}
+    </update>
 </mapper>
