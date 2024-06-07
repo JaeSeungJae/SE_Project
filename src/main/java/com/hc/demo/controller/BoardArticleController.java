@@ -3,14 +3,13 @@ package com.hc.demo.controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hc.demo.container.Pair;
+import com.hc.demo.container.User;
 import com.hc.demo.model.BoardArticleModel;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,10 +67,39 @@ public class BoardArticleController {
         // 2. article_uid를 이용하여 댓글 배열 불러오기
         // 3. article 정보를 하나의 jsonobject article_jo에 저장
         // 4. 댓글 정보를 for문 돌면서 jsonarray ja에 저장
+        // 5. 게시글 조회수 1 증가
         // 5. result-> addproperty , article-> add , comments-> add == return
+        if(boardArticleModel.incrementHits(article_uid) == 0) {
+            jo.addProperty("result", "failed");
+            return jo.toString();
+        }
         jo.addProperty("result", "success");
         jo.add("article",article_pair.getFirst());
         jo.add("comments", article_pair.getSecond());
+        return jo.toString();
+    }
+
+    @PostMapping("/rest/writeArticle")
+    public String writeArticle(HttpServletRequest req, @RequestBody HashMap<String, Object> body) {
+        HttpSession hs = req.getSession(false); // 사용자 세션정보 조회
+        JsonObject jo = new JsonObject();
+        if(hs == null){ // 세션 유무 체크
+            jo.addProperty("result", "failed");
+            System.out.println("null session error");
+            return jo.toString();
+        }
+//        if (boardArticleModel.writeArticle(((User)hs.getAttribute("User")).getUid(), (int)body.get("board_uid"), (String)body.get("title"), (String)body.get("content")) == 0) {
+//            jo.addProperty("result", "failed");
+//            return jo.toString();
+//        }
+        try {
+            boardArticleModel.writeArticle(((User)hs.getAttribute("User")).getUid(), (int)body.get("board_uid"), (String)body.get("title"), (String)body.get("content"));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+            return jo.toString();
+        }
+        jo.addProperty("result", "success");
         return jo.toString();
     }
 

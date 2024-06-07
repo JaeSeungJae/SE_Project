@@ -49,4 +49,20 @@
         WHERE
             c.article_uid = #{article_uid}
     </select>
+
+    <update id="incrementHits">
+        UPDATE
+            Article
+        SET
+            hits = hits + 1
+        WHERE
+            uid = #{article_uid}
+    </update>
+
+    <insert id="writeArticle">
+        INSERT INTO Article
+            (member_uid, board_uid, title, content)
+        VALUES
+            (#{uid}, #{board_uid}, #{title}, #{content})
+    </insert>
 </mapper>

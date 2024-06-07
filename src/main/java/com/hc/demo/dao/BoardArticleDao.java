@@ -12,4 +12,8 @@ public interface BoardArticleDao {
 
     HashMap<String, Object> getArticleInfo(int article_uid);
     List<HashMap<String, Object>> getComments(int article_uid);
+
+    int incrementHits(int article_uid);
+
+    int writeArticle(int uid, int board_uid, String title, String content);
 }

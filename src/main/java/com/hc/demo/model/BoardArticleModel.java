@@ -53,4 +53,11 @@ public class BoardArticleModel {
         Pair<JsonObject,JsonArray> result = new Pair<JsonObject,JsonArray>(item,ja);
         return result;
     }
+
+    public int incrementHits(int article_uid) {
+        return boardArticleService.incrementHits(article_uid);
+    }
+    public int writeArticle(int uid, int board_uid, String title, String content) {
+        return boardArticleService.writeArticle(uid,board_uid,title,content);
+    }
 }

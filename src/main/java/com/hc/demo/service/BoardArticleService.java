@@ -13,11 +13,6 @@ public class BoardArticleService implements BoardArticleDao {
     @Autowired
     private BoardArticleDao boardArticleDao;
 
-//    @Override
-//    public List<BoardArticle> getBoardArticleList(int board_uid) {
-//        return boardArticleDao.getBoardArticleList(board_uid);
-//    }
-
     @Override
     public List<Map<String, Object>> getBoardArticleList(int board_uid) {
         return boardArticleDao.getBoardArticleList(board_uid);
@@ -31,5 +26,15 @@ public class BoardArticleService implements BoardArticleDao {
     @Override
     public List<HashMap<String, Object>> getComments(int article_uid) {
         return boardArticleDao.getComments(article_uid);
+    }
+
+    @Override
+    public int incrementHits(int article_uid) {
+        return boardArticleDao.incrementHits(article_uid);
+    }
+
+    @Override
+    public int writeArticle(int uid, int board_uid, String title, String content) {
+        return 0;
     }
 }
