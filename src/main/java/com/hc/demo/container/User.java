@@ -1,73 +1,41 @@
 package com.hc.demo.container;
 
 public class User {
-    private int id, age, salary;
-    private String username, password, firstName, lastName;
 
-    public User(int id, String username, String password, String firstName, String lastName, int age, int salary) {
-        this.id = id;
-        this.age = age;
-        this.salary = salary;
-        this.username = username;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    private int uid, level;
+    private double reservedKRW;
+
+    private String ID, PW, Name, Nickname;
+
+    public User(int uid, String ID, String PW, String Name, String Nickname, int level, double reservedKRW) {
+        this.uid = uid;
+        this.ID = ID;
+        this.PW = PW;
+        this.Name = Name;
+        this.Nickname = Nickname;
+        this.level = level;
+        this.reservedKRW = reservedKRW;
     }
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return this.Name;
     }
 
-    public int getAge() {
-        return age;
+    public String getID() {
+        return ID;
     }
 
-    public int getSalary() {
-        return salary;
+    public String getNickname() {
+        return Nickname;
     }
 
-    public String getUsername() {
-        return username;
+    public int getUid() {
+        return uid;
     }
 
-    public String getPassword() {
-        return password;
+    public int getLevel() {
+        return level;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 }
 
