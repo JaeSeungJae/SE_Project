@@ -35,6 +35,6 @@ public class BoardArticleService implements BoardArticleDao {
 
     @Override
     public int writeArticle(int uid, int board_uid, String title, String content) {
-        return 0;
+        return boardArticleDao.writeArticle(uid, board_uid,title,content);
     }
 }
