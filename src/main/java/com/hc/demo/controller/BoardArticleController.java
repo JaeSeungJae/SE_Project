@@ -2,6 +2,7 @@ package com.hc.demo.controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hc.demo.container.Pair;
 import com.hc.demo.model.BoardArticleModel;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +50,30 @@ public class BoardArticleController {
         }
     }
 
-//    @GetMapping("/rest/")
+    @GetMapping("/rest/getBoardArticle")
+    @ResponseBody
+    public String getBoardArticle(@RequestParam(value = "article_uid") int article_uid) {
+        JsonObject jo = new JsonObject();
+        Pair<JsonObject, JsonArray> article_pair = new Pair<JsonObject,JsonArray>();
+
+        try {
+//            JsonObject articleInfo = boardArticleModel.getArticleAndComments(article_uid);
+            article_pair = boardArticleModel.getArticleAndComments(article_uid);
+        } catch (Exception e) {
+            jo.addProperty("result", "failed");
+            return jo.toString();
+//            throw new RuntimeException(e);
+        }
+        // 1. article_uid를 이용하여 게시글 불러오기
+        // 2. article_uid를 이용하여 댓글 배열 불러오기
+        // 3. article 정보를 하나의 jsonobject article_jo에 저장
+        // 4. 댓글 정보를 for문 돌면서 jsonarray ja에 저장
+        // 5. result-> addproperty , article-> add , comments-> add == return
+        jo.addProperty("result", "success");
+        jo.add("article",article_pair.getFirst());
+        jo.add("comments", article_pair.getSecond());
+        return jo.toString();
+    }
 
 
 }

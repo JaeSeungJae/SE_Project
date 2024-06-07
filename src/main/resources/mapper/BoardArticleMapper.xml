@@ -23,4 +23,30 @@
         uid DESC
         Limit 0, 1000
     </select>
+
+    <select id="getArticleInfo" resultType="HashMap">
+        SELECT
+            a.uid, m.nickname, a.title, a.content, a.hits, a.created_date
+        FROM
+            Article as a
+        JOIN
+            Member as m
+        ON
+           m.uid = a.member_uid
+        WHERE
+            a.uid = #{article_uid}
+    </select>
+
+    <select id="getComments" resultType="HashMap">
+        SELECT
+            c.uid, m.nickname, c.comment, c.created_date
+        FROM
+            Comment as c
+        JOIN
+            Member as m
+        ON
+            m.uid = c.member_uid
+        WHERE
+            c.article_uid = #{article_uid}
+    </select>
 </mapper>
