@@ -7,5 +7,6 @@ import java.util.Map;
 
 @Mapper
 public interface BoardArticleDao {
-    List<Map<String, Object>> getBoardArticleList(int board_uid);
+//    List<BoardArticle> getBoardArticleList(int board_uid);
+    List<Map<String,Object>> getBoardArticleList(int board_uid);
 }

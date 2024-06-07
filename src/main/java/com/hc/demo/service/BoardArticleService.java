@@ -12,8 +12,13 @@ public class BoardArticleService implements BoardArticleDao {
     @Autowired
     private BoardArticleDao boardArticleDao;
 
+//    @Override
+//    public List<BoardArticle> getBoardArticleList(int board_uid) {
+//        return boardArticleDao.getBoardArticleList(board_uid);
+//    }
+
     @Override
-    public List<Map<String,Object>> getBoardArticleList(int board_uid) {
+    public List<Map<String, Object>> getBoardArticleList(int board_uid) {
         return boardArticleDao.getBoardArticleList(board_uid);
     }
 }

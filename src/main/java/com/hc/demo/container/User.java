@@ -25,5 +25,8 @@ public class User {
         return Nickname;
     }
 
+    public void setNickname(String nickname) {
+        Nickname = nickname;
+    }
 }
 

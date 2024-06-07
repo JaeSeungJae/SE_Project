@@ -10,4 +10,12 @@ public class Board {
         this.read_level = 0;
         this.write_level = 0;
     }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

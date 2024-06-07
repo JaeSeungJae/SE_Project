@@ -16,4 +16,31 @@ public class Article {
         this.content = content;
         this.created_date = created_date;
     }
+
+    public void setListInfo(int article_uid, String title, LocalDateTime created_date, int hits) {
+        this.uid = article_uid;
+        this.title = title;
+        this.created_date = created_date;
+        this.hits = hits;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public int getHits() {
+        return hits;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public LocalDateTime getCreated_date() {
+        return created_date;
+    }
 }
