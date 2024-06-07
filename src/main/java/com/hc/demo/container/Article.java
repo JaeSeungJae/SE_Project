@@ -43,4 +43,8 @@ public class Article {
     public LocalDateTime getCreated_date() {
         return created_date;
     }
+
+    public int getMember_uid() {
+        return member_uid;
+    }
 }

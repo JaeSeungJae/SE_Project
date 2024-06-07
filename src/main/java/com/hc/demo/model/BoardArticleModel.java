@@ -1,8 +1,12 @@
 package com.hc.demo.model;
 
+
+import com.hc.demo.container.Article;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hc.demo.container.Pair;
+
 import com.hc.demo.service.BoardArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +27,14 @@ public class BoardArticleModel {
     public List<Map<String,Object>> getBoardArticleList(int board_uid) {
         return boardArticleService.getBoardArticleList(board_uid);
     }
+
+
+    public Article getArticle(int article_uid) {
+        return boardArticleService.getArticle(article_uid);
+    }
+
+    public int modifyArticle(int article_uid,String title, String content) {
+        return boardArticleService.modifyArticle(article_uid, title, content);
 
     public Pair<JsonObject,JsonArray> getArticleAndComments(int article_uid) throws Exception {
         // 1. article_uid를 이용하여 게시글 불러오기
@@ -59,5 +71,6 @@ public class BoardArticleModel {
     }
     public int writeArticle(int uid, int board_uid, String title, String content) {
         return boardArticleService.writeArticle(uid,board_uid,title,content);
+
     }
 }

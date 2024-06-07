@@ -1,5 +1,6 @@
 package com.hc.demo.service;
 
+import com.hc.demo.container.Article;
 import com.hc.demo.dao.BoardArticleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,15 @@ public class BoardArticleService implements BoardArticleDao {
     }
 
     @Override
+
+    public Article getArticle(int article_uid) {
+        return boardArticleDao.getArticle(article_uid);
+    }
+
+    @Override
+    public int modifyArticle(int article_uid,String title, String content) {
+        return boardArticleDao.modifyArticle(article_uid, title, content);
+
     public HashMap<String, Object> getArticleInfo(int article_uid) {
         return boardArticleDao.getArticleInfo(article_uid);
     }
@@ -36,5 +46,6 @@ public class BoardArticleService implements BoardArticleDao {
     @Override
     public int writeArticle(int uid, int board_uid, String title, String content) {
         return boardArticleDao.writeArticle(uid, board_uid,title,content);
+
     }
 }
