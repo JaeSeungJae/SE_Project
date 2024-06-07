@@ -2,17 +2,18 @@ package com.hc.demo.controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import com.hc.demo.container.Article;
+import com.hc.demo.container.Pair;
 import com.hc.demo.container.User;
 import com.hc.demo.model.BoardArticleModel;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.HttpSession;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ public class BoardArticleController {
         }
     }
 
+
     @PostMapping("/rest/updateArticle")
     public String updateArticle(HttpServletRequest req, @RequestBody HashMap<String,Object> body)
     {
@@ -79,6 +81,61 @@ public class BoardArticleController {
     }
 
 //    @GetMapping("/rest/")
+
+    @GetMapping("/rest/getBoardArticle")
+    @ResponseBody
+    public String getBoardArticle(@RequestParam(value = "article_uid") int article_uid) {
+        JsonObject jo = new JsonObject();
+        Pair<JsonObject, JsonArray> article_pair = new Pair<JsonObject,JsonArray>();
+
+        try {
+//            JsonObject articleInfo = boardArticleModel.getArticleAndComments(article_uid);
+            article_pair = boardArticleModel.getArticleAndComments(article_uid);
+        } catch (Exception e) {
+            jo.addProperty("result", "failed");
+            return jo.toString();
+//            throw new RuntimeException(e);
+        }
+        // 1. article_uid를 이용하여 게시글 불러오기
+        // 2. article_uid를 이용하여 댓글 배열 불러오기
+        // 3. article 정보를 하나의 jsonobject article_jo에 저장
+        // 4. 댓글 정보를 for문 돌면서 jsonarray ja에 저장
+        // 5. 게시글 조회수 1 증가
+        // 5. result-> addproperty , article-> add , comments-> add == return
+        if(boardArticleModel.incrementHits(article_uid) == 0) {
+            jo.addProperty("result", "failed");
+            return jo.toString();
+        }
+        jo.addProperty("result", "success");
+        jo.add("article",article_pair.getFirst());
+        jo.add("comments", article_pair.getSecond());
+        return jo.toString();
+    }
+
+    @PostMapping("/rest/writeArticle")
+    public String writeArticle(HttpServletRequest req, @RequestBody HashMap<String, Object> body) {
+        HttpSession hs = req.getSession(false); // 사용자 세션정보 조회
+        JsonObject jo = new JsonObject();
+        if(hs == null){ // 세션 유무 체크
+            jo.addProperty("result", "failed");
+            System.out.println("null session error");
+            return jo.toString();
+        }
+//        if (boardArticleModel.writeArticle(((User)hs.getAttribute("User")).getUid(), (int)body.get("board_uid"), (String)body.get("title"), (String)body.get("content")) == 0) {
+//            jo.addProperty("result", "failed");
+//            return jo.toString();
+//        }
+        try {
+            boardArticleModel.writeArticle(((User)hs.getAttribute("User")).getUid(), (int)body.get("board_uid"), (String)body.get("title"), (String)body.get("content"));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+            return jo.toString();
+        }
+        jo.addProperty("result", "success");
+        return jo.toString();
+    }
+
 
 
 }
