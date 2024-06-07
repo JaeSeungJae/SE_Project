@@ -116,6 +116,11 @@ public class FirstController {
                 User user = (User)hs.getAttribute("User");
                 userModel.modifyUser(user.getUid(), (String) body.get("pw"), (String) body.get("name"), (String) body.get("nickname"));
                 jo.addProperty("result","success");
+
+                if(userModel.loginUser((String)user.getID(),(String)body.get("pw"),hs) != null) // id 유효성 체크
+                    jo.addProperty("result","success");
+                else
+                    jo.addProperty("result","failed");
             }
             else {
                 jo.addProperty("result", "failed");
