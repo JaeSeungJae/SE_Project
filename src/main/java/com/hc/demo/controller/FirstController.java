@@ -3,6 +3,7 @@ package com.hc.demo.controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hc.demo.container.User;
+import com.hc.demo.model.ApiModel;
 import com.hc.demo.model.UserModel;
 import com.hc.demo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class FirstController {
@@ -43,9 +45,9 @@ public class FirstController {
         HttpSession hs = req.getSession(true); // 사용자 세션정보 조회 (없으면 새로운 세션 생성)
         JsonObject jo = new JsonObject();
         if(userModel.loginUser((String)body.get("id"),(String)body.get("pw"),hs) != null) // id 유효성 체크
-            jo.addProperty("res","success");
+            jo.addProperty("result","success");
         else
-            jo.addProperty("res","failed");
+            jo.addProperty("result","failed");
 
         return jo.toString(); // 로그인 성공여부 반환
     }
@@ -57,11 +59,11 @@ public class FirstController {
 
         try{
             hs.invalidate(); // 세션 만료처리 (세션에 저장된 정보 삭제)
-            jo.addProperty("res","success");  // 로그아웃 처리 결과 리턴
+            jo.addProperty("result","success");  // 로그아웃 처리 결과 리턴
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
-            jo.addProperty("res","failed");  // 로그아웃 처리 결과 리턴
+            jo.addProperty("result","failed");  // 로그아웃 처리 결과 리턴
         }
 
 //        jo.addProperty("res","success");  // 로그아웃 처리 결과 리턴
@@ -73,14 +75,15 @@ public class FirstController {
         JsonObject jo = new JsonObject();
         try {
             userModel.registerUser((String) body.get("id"), (String) body.get("pw"), (String) body.get("name"), (String) body.get("nickname"));
-            jo.addProperty("res", "success");
+            jo.addProperty("result", "success");
         }
         catch(DataAccessException e) { // sql문 오류 시 예외 처리
             System.out.println(e.getMessage());
-            jo.addProperty("res", "failed");
+            jo.addProperty("result", "failed");
         }
         return jo.toString();
     }
+
 
     @PostMapping("/rest/deleteMember")
     public String deleteMember(HttpServletRequest req) {
@@ -124,6 +127,8 @@ public class FirstController {
         }
         return jo.toString();
     }
+
+
 
 }
 

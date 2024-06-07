@@ -4,28 +4,28 @@
 <mapper namespace="com.hc.demo.dao.UserDao">
     <select id="getUser" resultType="com.hc.demo.container.User">
         SELECT
-            uid, ID, PW, Name, Nickname, `reserved KRW`
+            uid, id, pw, name, nickname, level, reserved_KRW
         FROM
-            member
+            Member
     </select>
     <select id="getUserLogin" resultType="com.hc.demo.container.User">
         SELECT
-            uid, ID, PW, Name, Nickname, `reserved KRW`
+            uid, id, pw, name, nickname, level,  reserved_KRW
         FROM
-            member
+            Member
         WHERE
-            ID = #{ID} AND
-            PW = sha2(#{PW},256)
+            id= #{ID} AND
+            pw = sha2(#{PW},256)
 <!--            password = sha2(#{password},256)-->
     </select>
     <insert id="registerUserInfo" parameterType="com.hc.demo.container.User">
-        INSERT INTO member
+        INSERT INTO Member
         (
         <trim suffixOverrides=",">
-            ID,
-            PW,
-            Name,
-            Nickname,
+            id,
+            pw,
+            name,
+            nickname,
         </trim>
         ) VALUES (
         <trim suffixOverrides=",">
