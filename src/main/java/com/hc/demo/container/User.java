@@ -30,7 +30,7 @@ public class User {
 
     public int getUid() {
         return uid;
-
+    }
 
     public int getLevel() {
         return level;
