@@ -21,7 +21,6 @@ import java.util.HashMap;
 @RestController
 public class BoardArticleController {
 
-    private static final Logger log = LoggerFactory.getLogger(BoardArticleController.class);
     @Autowired
     BoardArticleModel boardArticleModel;
 

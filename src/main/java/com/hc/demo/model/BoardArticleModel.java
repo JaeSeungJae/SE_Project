@@ -35,6 +35,7 @@ public class BoardArticleModel {
 
     public int modifyArticle(int article_uid,String title, String content) {
         return boardArticleService.modifyArticle(article_uid, title, content);
+    }
 
     public Pair<JsonObject,JsonArray> getArticleAndComments(int article_uid) throws Exception {
         // 1. article_uid를 이용하여 게시글 불러오기

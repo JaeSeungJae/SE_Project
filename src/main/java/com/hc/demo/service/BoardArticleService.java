@@ -20,7 +20,6 @@ public class BoardArticleService implements BoardArticleDao {
     }
 
     @Override
-
     public Article getArticle(int article_uid) {
         return boardArticleDao.getArticle(article_uid);
     }
@@ -28,6 +27,7 @@ public class BoardArticleService implements BoardArticleDao {
     @Override
     public int modifyArticle(int article_uid,String title, String content) {
         return boardArticleDao.modifyArticle(article_uid, title, content);
+    }
 
     public HashMap<String, Object> getArticleInfo(int article_uid) {
         return boardArticleDao.getArticleInfo(article_uid);
