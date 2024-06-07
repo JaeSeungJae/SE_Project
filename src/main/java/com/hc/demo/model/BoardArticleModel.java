@@ -5,6 +5,7 @@ import com.hc.demo.container.Article;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hc.demo.container.Comment;
 import com.hc.demo.container.Pair;
 
 import com.hc.demo.service.BoardArticleService;
@@ -73,5 +74,17 @@ public class BoardArticleModel {
     public int writeArticle(int uid, int board_uid, String title, String content) {
         return boardArticleService.writeArticle(uid,board_uid,title,content);
 
+    }
+
+    public int writeComment(int uid, int article_uid, String comment) {
+        return boardArticleService.writeComment(uid, article_uid, comment);
+    }
+
+    public Comment getComment(int cmt_uid) {
+        return boardArticleService.getComment(cmt_uid);
+    }
+
+    public int updateComment(int uid, String comment) {
+        return boardArticleService.updateComment(uid, comment);
     }
 }

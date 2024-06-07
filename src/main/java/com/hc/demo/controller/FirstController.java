@@ -30,6 +30,7 @@ public class FirstController {
             jo2.addProperty("id",user.getID());
             jo2.addProperty("name",user.getName());
             jo2.addProperty("nickname",user.getNickname());
+            jo2.addProperty("level",user.getLevel());
             jo.addProperty("logged",true);
             jo.add("data",jo2);
         }

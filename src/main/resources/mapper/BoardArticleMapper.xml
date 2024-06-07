@@ -84,4 +84,29 @@
         VALUES
             (#{uid}, #{board_uid}, #{title}, #{content})
     </insert>
+
+    <insert id="writeComment">
+        INSERT INTO Comment
+        (member_uid, article_uid, comment)
+        VALUES
+        (#{uid}, #{article_uid}, #{comment})
+    </insert>
+
+    <select id="getComment" resultType="com.hc.demo.container.Comment">
+        SELECT
+            uid, article_uid, member_uid, comment, created_date
+        FROM
+            Comment
+        WHERE
+            uid = #{comment_uid}
+    </select>
+
+    <update id="updateComment">
+        UPDATE
+            Comment
+        SET
+            comment = #{comment}
+        WHERE
+            uid = #{uid}
+    </update>
 </mapper>

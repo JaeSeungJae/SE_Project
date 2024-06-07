@@ -2,11 +2,12 @@ package com.hc.demo.container;
 
 public class User {
 
-    private int uid, reservedKRW, level;
+    private int uid, level;
+    private double reservedKRW;
 
     private String ID, PW, Name, Nickname;
 
-    public User(int uid, String ID, String PW, String Name, String Nickname, int level, int reservedKRW) {
+    public User(int uid, String ID, String PW, String Name, String Nickname, int level, double reservedKRW) {
         this.uid = uid;
         this.ID = ID;
         this.PW = PW;
@@ -36,9 +37,5 @@ public class User {
         return level;
     }
 
-    public void setNickname(String nickname) {
-        Nickname = nickname;
-
-    }
 }
 

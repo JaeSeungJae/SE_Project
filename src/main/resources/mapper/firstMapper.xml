@@ -10,7 +10,7 @@
     </select>
     <select id="getUserLogin" resultType="com.hc.demo.container.User">
         SELECT
-            uid, id, pw, name, nickname, level,  reserved_KRW
+            uid, id, pw, name, nickname, level, reserved_KRW
         FROM
             Member
         WHERE
