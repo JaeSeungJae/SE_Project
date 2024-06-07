@@ -165,20 +165,16 @@ public class BoardArticleController {
     }
 
     @PostMapping("/rest/deleteComment")
-    public String deleteComment(HttpServletRequest req, @RequestBody HashMap<String,Object> body)
-    {
+    public String deleteComment(HttpServletRequest req, @RequestBody HashMap<String,Object> body) {
         HttpSession hs = req.getSession();
         JsonObject jo = new JsonObject();
-        User user = (User)hs.getAttribute("User");
-        Comment comment = boardArticleModel.getComment((int)body.get("cmt_uid"));
+        User user = (User) hs.getAttribute("User");
+        Comment comment = boardArticleModel.getComment((int) body.get("cmt_uid"));
         try {
-            if(comment!=null && comment.getUser_uid()==user.getUid())
-            {
+            if (comment != null && comment.getUser_uid() == user.getUid()) {
                 boardArticleModel.DeleteComment(comment.getUid());
-                jo.addProperty("result","success");
-            }
-            else
-            {
+                jo.addProperty("result", "success");
+            } else {
                 jo.addProperty("result", "failed");
             }
             return jo.toString();
@@ -188,6 +184,7 @@ public class BoardArticleController {
 //            jo.add("data", ja);
             return jo.toString();
         }
+    }
 
     @PostMapping("/rest/writeComment")
     public String writeComment(HttpServletRequest req, @RequestBody HashMap<String, Object> body) {
