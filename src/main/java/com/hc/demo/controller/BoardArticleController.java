@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import com.hc.demo.container.Article;
+import com.hc.demo.container.Comment;
 import com.hc.demo.container.Pair;
 import com.hc.demo.container.User;
 import com.hc.demo.container.Comment;
@@ -136,6 +137,7 @@ public class BoardArticleController {
         return jo.toString();
     }
 
+
     @PostMapping("/rest/deleteArticle")
     public String deleteArticle(HttpServletRequest req, @RequestBody HashMap<String,Object> body)
     {
@@ -186,6 +188,58 @@ public class BoardArticleController {
 //            jo.add("data", ja);
             return jo.toString();
         }
+
+    @PostMapping("/rest/writeComment")
+    public String writeComment(HttpServletRequest req, @RequestBody HashMap<String, Object> body) {
+        HttpSession hs = req.getSession(false); // 사용자 세션정보 조회
+        JsonObject jo = new JsonObject();
+        if(hs == null){ // 세션 유무 체크
+            jo.addProperty("result", "failed");
+            System.out.println("null session error");
+            return jo.toString();
+        }
+        int user_uid = ((User)hs.getAttribute("User")).getUid();
+        try{
+            boardArticleModel.writeComment(user_uid, (int)body.get("article_uid"), (String)body.get("content"));
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+            return jo.toString();
+        }
+        jo.addProperty("result", "success");
+        return jo.toString();
+    }
+
+    @PostMapping("/rest/updateComment")
+    public String updateComment(HttpServletRequest req, @RequestBody HashMap<String, Object> body) {
+        HttpSession hs = req.getSession(false); // 사용자 세션정보 조회
+        JsonObject jo = new JsonObject();
+        if(hs == null){ // 세션 유무 체크
+            jo.addProperty("result", "failed");
+            System.out.println("null session error");
+            return jo.toString();
+        }
+        int comment_uid = (int)body.get("cmt_uid");
+        int user_uid = ((User)hs.getAttribute("User")).getUid();
+        Comment comment = boardArticleModel.getComment(comment_uid);
+
+        if(comment.getUser_uid() != user_uid) { // 수정 시도하는 사용자가 댓글 작성자와 같은지 체크
+            jo.addProperty("result", "failed");
+            System.out.println("updating user mismatch");
+            return jo.toString();
+        }
+
+        try{
+            boardArticleModel.updateComment(comment_uid, (String)body.get("content"));
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Sql execution error");
+            jo.addProperty("result", "failed");
+            return jo.toString();
+        }
+        jo.addProperty("result", "success");
+        return jo.toString();
+
     }
 
 }

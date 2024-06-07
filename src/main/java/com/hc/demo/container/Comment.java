@@ -16,6 +16,7 @@ public class Comment {
         this.created_date = created_date;
     }
 
+
     public int getUid() {
         return uid;
     }

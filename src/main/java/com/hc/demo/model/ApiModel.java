@@ -56,7 +56,7 @@ public class ApiModel {
                 responseBody.append(line);
             }
 
-            System.out.println(responseBody.toString());
+//            System.out.println(responseBody.toString());
             return responseBody.toString();
         } catch (IOException e) {
             throw new RuntimeException("API 응답을 읽는 데 실패했습니다.", e);
