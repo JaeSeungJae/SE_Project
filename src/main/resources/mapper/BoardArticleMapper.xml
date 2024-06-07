@@ -6,13 +6,13 @@
         SELECT
             b.name, a.uid, a.title, m.Nickname, a.created_date, a.hits
         FROM
-            article as a
+            Article as a
         JOIN
-            board as b
+            Board as b
         ON
             a.board_uid = b.uid
         JOIN
-            member as m
+            Member as m
         ON
             a.member_uid = m.uid
         <if test="board_uid > 0">

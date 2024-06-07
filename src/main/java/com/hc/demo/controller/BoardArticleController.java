@@ -48,5 +48,7 @@ public class BoardArticleController {
         }
     }
 
+    @GetMapping("/rest/")
+
 
 }
