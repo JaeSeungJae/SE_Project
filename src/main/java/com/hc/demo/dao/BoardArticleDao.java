@@ -32,8 +32,6 @@ public interface BoardArticleDao {
 
     int writeComment(int uid, int article_uid, String comment);
 
-    Comment getComment(int comment_uid);
-
     int updateComment(int uid, String comment);
 
 }

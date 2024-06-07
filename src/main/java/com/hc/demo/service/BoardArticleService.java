@@ -54,10 +54,6 @@ public class BoardArticleService implements BoardArticleDao {
         return boardArticleDao.writeComment(uid, article_uid,comment);
     }
 
-    @Override
-    public Comment getComment(int comment_uid) {
-        return boardArticleDao.getComment(comment_uid);
-    }
 
     @Override
     public int updateComment(int uid, String comment) {

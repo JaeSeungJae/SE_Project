@@ -88,13 +88,10 @@ public class BoardArticleModel {
 
     public int DeleteComment(int comment_uid) {
         return boardArticleService.DeleteComment(comment_uid);
+    }
 
     public int writeComment(int uid, int article_uid, String comment) {
         return boardArticleService.writeComment(uid, article_uid, comment);
-    }
-
-    public Comment getComment(int cmt_uid) {
-        return boardArticleService.getComment(cmt_uid);
     }
 
     public int updateComment(int uid, String comment) {
