@@ -39,17 +39,17 @@
     <delete id="deleteUserInfo" parameterType="com.hc.demo.container.User">
         DELETE
         FROM
-            member
+            Member
         WHERE
             uid = #{uid}
     </delete>
     <update id="modifyUserInfo" parameterType="com.hc.demo.container.User">
         UPDATE
-            member
+            Member
         SET
-            PW = sha2(#{PW},256),
-            Name = #{Name},
-            Nickname = #{Nickname}
+            pw = sha2(#{PW},256),
+            name = #{Name},
+            nickname = #{Nickname}
         WHERE
             uid = #{uid}
     </update>
