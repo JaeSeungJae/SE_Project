@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hc.demo.dao.BoardArticleDao">
+    <select id="getBoardArticleList" resultType="map">
+        SELECT
+            b.name, a.uid, a.title, m.Nickname, a.created_date, a.hits
+        FROM
+            Article as a
+        JOIN
+            Board as b
+        ON
+            a.board_uid = b.uid
+        JOIN
+            Member as m
+        ON
+            a.member_uid = m.uid
+        <if test="board_uid > 0">
+            WHERE
+            a.board_uid = #{board_uid}
+        </if>
+        ORDER BY
+        uid DESC
+        Limit 0, 1000
+    </select>
+
+    <select id="getArticle" resultType="com.hc.demo.container.Article">
+        SELECT
+            uid, board_uid, member_uid, hits, title, content,  created_date
+        FROM
+            Article
+        WHERE
+            uid = #{article_uid}
+    </select>
+    <update id="modifyArticle" parameterType="com.hc.demo.container.Article">
+        UPDATE
+            Article
+        SET
+            title = #{title},
+            content = #{content}
+        WHERE
+            uid = #{article_uid}
+    </update>
+
+
+    <select id="getArticleInfo" resultType="HashMap">
+        SELECT
+            a.uid, m.nickname, a.title, a.content, a.hits, a.created_date
+        FROM
+            Article as a
+        JOIN
+            Member as m
+        ON
+           m.uid = a.member_uid
+        WHERE
+            a.uid = #{article_uid}
+    </select>
+
+    <select id="getComments" resultType="HashMap">
+        SELECT
+            c.uid, m.nickname, c.comment, c.created_date
+        FROM
+            Comment as c
+        JOIN
+            Member as m
+        ON
+            m.uid = c.member_uid
+        WHERE
+            c.article_uid = #{article_uid}
+    </select>
+
+    <update id="incrementHits">
+        UPDATE
+            Article
+        SET
+            hits = hits + 1
+        WHERE
+            uid = #{article_uid}
+    </update>
+
+    <insert id="writeArticle">
+        INSERT INTO Article
+            (member_uid, board_uid, title, content)
+        VALUES
+            (#{uid}, #{board_uid}, #{title}, #{content})
+    </insert>
+
+    <delete id="DeleteArticle" parameterType="com.hc.demo.container.Article">
+        DELETE
+        FROM
+            Article
+        WHERE
+            uid = #{article_uid}
+    </delete>
+
+
+    <insert id="writeComment">
+        INSERT INTO Comment
+        (member_uid, article_uid, comment)
+        VALUES
+        (#{uid}, #{article_uid}, #{comment})
+    </insert>
+
+
+    <select id="getComment" resultType="com.hc.demo.container.Comment">
+        SELECT
+            uid, article_uid, member_uid, comment, created_date
+        FROM
+            Comment
+        WHERE
+            uid = #{comment_uid}
+    </select>
+
+    <delete id="DeleteComment" parameterType="com.hc.demo.container.Comment">
+        DELETE
+        FROM
+            Comment
+        WHERE
+            uid = #{comment_uid}
+    </delete>
+
+
+    <update id="updateComment">
+        UPDATE
+            Comment
+        SET
+            comment = #{comment}
+        WHERE
+            uid = #{uid}
+    </update>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hc.demo.dao.UserDao">
+    <select id="getUser" resultType="com.hc.demo.container.User">
+        SELECT
+            uid, id, pw, name, nickname, level, reserved_KRW
+        FROM
+            Member
+    </select>
+    <select id="getUserLogin" resultType="com.hc.demo.container.User">
+        SELECT
+            uid, id, pw, name, nickname, level, reserved_KRW
+        FROM
+            Member
+        WHERE
+            id= #{ID} AND
+            pw = sha2(#{PW},256)
+<!--            password = sha2(#{password},256)-->
+    </select>
+    <insert id="registerUserInfo" parameterType="com.hc.demo.container.User">
+        INSERT INTO Member
+        (
+        <trim suffixOverrides=",">
+            id,
+            pw,
+            name,
+            nickname,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{ID},
+            sha2(#{PW},256),
+            #{Name},
+            #{Nickname}
+        </trim>
+        )
+    </insert>
+    <delete id="deleteUserInfo" parameterType="com.hc.demo.container.User">
+        DELETE
+        FROM
+            Member
+        WHERE
+            uid = #{uid}
+    </delete>
+    <update id="modifyUserInfo" parameterType="com.hc.demo.container.User">
+        UPDATE
+            Member
+        SET
+            pw = sha2(#{PW},256),
+            name = #{Name},
+            nickname = #{Nickname}
+        WHERE
+            uid = #{uid}
+    </update>
+</mapper>
