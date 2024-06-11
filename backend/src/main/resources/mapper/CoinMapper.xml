@@ -19,29 +19,97 @@
 
     <select id="getCoinList" resultType="HashMap">
         SELECT
-        c.uid,
-        c.name,
-        c.symbol,
-        ROUND(p.closing_price, 2) AS closing_price,
-        ROUND((p.closing_price - p.opening_price), 2) AS updown_amount,
-        ROUND(((p.closing_price - p.opening_price) / p.opening_price * 100), 2) AS updown_rate,
-        CASE WHEN f.member_uid IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+            c.uid,
+            c.name,
+            c.symbol,
+            ROUND(p.closing_price, 2) AS closing_price,
+            ROUND((p.closing_price - p.opening_price), 2) AS updown_amount,
+            ROUND(((p.closing_price - p.opening_price) / p.opening_price * 100), 2) AS updown_rate,
+            CASE WHEN f.member_uid IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
         FROM
-        Coin c
+            Coin c
         JOIN
-        price_info p ON c.uid = p.coin_uid
+            price_info p ON c.uid = p.coin_uid
         JOIN (
-        SELECT
-        coin_uid,
-        MAX(standard_time) AS latest_standard_time
-        FROM
-        price_info
-        GROUP BY
-        coin_uid
+            SELECT
+                coin_uid,
+                MAX(standard_time) AS latest_standard_time
+            FROM
+                price_info
+            GROUP BY
+                coin_uid
         ) lp ON p.coin_uid = lp.coin_uid AND p.standard_time = lp.latest_standard_time
         LEFT JOIN
-        Favorites f ON c.uid = f.coin_uid AND f.member_uid = #{uid}
+            Favorites f ON c.uid = f.coin_uid AND f.member_uid = #{uid}
         WHERE
-        c.uid != 127;
+            c.uid != 127
+    </select>
+
+    <select id="getHotCoinList" resultType="HashMap">
+        SELECT
+            c.uid,
+            c.name,
+            c.symbol,
+            ROUND(p.closing_price, 2) AS closing_price,
+            ROUND((p.closing_price - p.opening_price), 2) AS updown_amount,
+            ROUND(((p.closing_price - p.opening_price) / p.opening_price * 100), 2) AS updown_rate,
+            CASE WHEN f.member_uid IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+        FROM
+            Coin c
+        JOIN
+            price_info p ON c.uid = p.coin_uid
+        JOIN (
+            SELECT
+            coin_uid,
+            MAX(standard_time) AS latest_standard_time
+            FROM
+            price_info
+            GROUP BY
+            coin_uid
+            ) lp ON p.coin_uid = lp.coin_uid AND p.standard_time = lp.latest_standard_time
+        LEFT JOIN
+            Favorites f ON c.uid = f.coin_uid AND f.member_uid = #{uid}
+        WHERE
+            c.uid != 127
+        ORDER BY
+            updown_rate DESC
+        LIMIT 5
+    </select>
+
+    <select id="getCoinInfo" resultType="HashMap">
+        SELECT
+            c.uid,
+            c.name,
+            c.symbol,
+            ROUND(p.closing_price, 2) AS closing_price,
+            ROUND((p.closing_price - p.opening_price), 2) AS updown_amount,
+            ROUND(((p.closing_price - p.opening_price) / p.opening_price * 100), 2) AS updown_rate,
+            CASE WHEN f.member_uid IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+        FROM
+            Coin c
+        JOIN
+            price_info p ON c.uid = p.coin_uid
+        JOIN (
+            SELECT
+            coin_uid,
+            MAX(standard_time) AS latest_standard_time
+            FROM
+            price_info
+            GROUP BY
+            coin_uid
+        ) lp ON p.coin_uid = lp.coin_uid AND p.standard_time = lp.latest_standard_time
+        LEFT JOIN
+            Favorites f ON c.uid = f.coin_uid AND f.member_uid = #{uid}
+        WHERE
+            c.uid = #{coin_uid};
+    </select>
+
+    <select id="getCoinPriceInfo" resultType="HashMap">
+        SELECT
+            standard_time,opening_price, upper_limit_price, lower_limit_price, closing_price
+        FROM
+            price_info
+        WHERE
+            coin_uid = #{coin_uid}
     </select>
 </mapper>

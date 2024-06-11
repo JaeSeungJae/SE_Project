@@ -12,6 +12,8 @@ import java.util.Map;
 public interface BoardArticleDao {
     List<Map<String,Object>> getBoardArticleList(int board_uid);
 
+    List<Map<String,Object>> getHotArticles();
+
     Article getArticle(int article_uid);
     int modifyArticle(int article_uid, String title, String content);
 

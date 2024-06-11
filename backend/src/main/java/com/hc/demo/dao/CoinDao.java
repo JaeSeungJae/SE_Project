@@ -13,4 +13,10 @@ public interface CoinDao {
 
     List<HashMap<String, Object>> getCoinList(int uid);
 
+    List<HashMap<String, Object>> getHotCoinList(int uid);
+
+    HashMap<String, Object> getCoinInfo(int uid, int coin_uid);
+
+    List<HashMap<String, Object>> getCoinPriceInfo (int coin_uid);
+
 }
