@@ -27,4 +27,16 @@ public class CoinModel {
     public int depositKRW(int uid, double reservedKRW) {
         return coinService.depositKRW(uid, reservedKRW);
     }
+
+    public List<HashMap<String,Object>> getHotCoinList(int uid) {
+        return coinService.getHotCoinList(uid);
+    }
+
+    public HashMap<String, Object> getCoinInfo(int uid, int coin_uid) {
+        return coinService.getCoinInfo(uid, coin_uid);
+    }
+
+    public List<HashMap<String, Object>> getCoinPriceInfo(int coin_uid) {
+        return coinService.getCoinPriceInfo(coin_uid);
+    }
 }

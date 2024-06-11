@@ -30,4 +30,19 @@ public class CoinService implements CoinDao {
     public int depositKRW(int uid, double reservedKRW) {
         return coinDao.depositKRW(uid, reservedKRW);
     }
+
+    @Override
+    public List<HashMap<String, Object>> getHotCoinList(int uid) {
+        return coinDao.getHotCoinList(uid);
+    }
+
+    @Override
+    public HashMap<String, Object> getCoinInfo(int uid, int coin_uid) {
+        return coinDao.getCoinInfo(uid, coin_uid);
+    }
+
+    @Override
+    public List<HashMap<String, Object>> getCoinPriceInfo(int coin_uid) {
+        return coinDao.getCoinPriceInfo(coin_uid);
+    }
 }
