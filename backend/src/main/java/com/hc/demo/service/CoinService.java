@@ -3,7 +3,7 @@ package com.hc.demo.service;
 import com.hc.demo.dao.CoinDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.hc.demo.container.User;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,5 +24,10 @@ public class CoinService implements CoinDao {
     @Override
     public List<HashMap<String, Object>> getCoinList(int uid) {
         return coinDao.getCoinList(uid);
+    }
+
+    @Override
+    public int depositKRW(int uid, double reservedKRW) {
+        return coinDao.depositKRW(uid, reservedKRW);
     }
 }

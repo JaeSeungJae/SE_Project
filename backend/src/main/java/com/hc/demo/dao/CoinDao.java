@@ -1,7 +1,7 @@
 package com.hc.demo.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-
+import com.hc.demo.container.User;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,4 +13,5 @@ public interface CoinDao {
 
     List<HashMap<String, Object>> getCoinList(int uid);
 
+    int depositKRW(int uid, double reservedKRW);
 }

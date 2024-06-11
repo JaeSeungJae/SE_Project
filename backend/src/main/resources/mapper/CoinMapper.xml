@@ -44,4 +44,13 @@
         WHERE
         c.uid != 127;
     </select>
+
+    <update id="depositKRW" parameterType="com.hc.demo.container.User">
+        UPDATE
+            Member
+        SET
+            reserved_KRW = #{reservedKRW}
+        WHERE
+            uid = #{uid}
+    </update>
 </mapper>

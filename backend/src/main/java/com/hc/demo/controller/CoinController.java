@@ -4,13 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hc.demo.container.User;
 import com.hc.demo.model.CoinModel;
+import com.hc.demo.model.UserModel;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -21,6 +19,8 @@ public class CoinController {
 
     @Autowired
     CoinModel coinModel;
+    @Autowired
+    UserModel userModel;
 
     @GetMapping("/rest/setCoinFavorite")
     @ResponseBody
@@ -97,6 +97,63 @@ public class CoinController {
         }
         jo.addProperty("result", "success");
         jo.add("data",ja);
+        return jo.toString();
+    }
+
+    @GetMapping("/rest/getMyKRW")
+    public String getMyKRW(HttpServletRequest req) {
+        HttpSession hs = req.getSession();
+        JsonObject jo = new JsonObject();
+
+        if(hs!=null && hs.getAttribute("Logged") != null && (Boolean)hs.getAttribute("Logged")) {
+            User user = (User)hs.getAttribute("User");
+            jo.addProperty("result","success");
+            jo.addProperty("amount",user.getReservedKRW());
+        }
+        else {
+            jo.addProperty("result", "failed");
+        }
+
+        return jo.toString();
+    }
+
+    @PostMapping("/rest/depositKRW")
+    public String depositKRW(HttpServletRequest req, @RequestBody HashMap<String,Object> body) {
+        HttpSession hs = req.getSession();
+        JsonObject jo = new JsonObject();
+
+        if(hs!=null && hs.getAttribute("Logged") != null && (Boolean)hs.getAttribute("Logged")) {
+            User user = (User)hs.getAttribute("User");
+            double modify_KRW = user.getReservedKRW()+(double)body.get("amount");
+            user.setReservedKRW(modify_KRW);
+            coinModel.depositKRW(user.getUid(), modify_KRW);
+            hs.setAttribute("User",user);
+            jo.addProperty("result","success");
+        }
+        else {
+            jo.addProperty("result", "failed");
+        }
+
+        return jo.toString();
+    }
+
+    @GetMapping("/rest/getCoinDeals")
+    public String getCoinDeals(HttpServletRequest req, @RequestParam(value = "board_uid") int coin_uid) {
+        HttpSession hs = req.getSession();
+        JsonObject jo = new JsonObject();
+
+        if(hs!=null && hs.getAttribute("Logged") != null && (Boolean)hs.getAttribute("Logged")) {
+            User user = (User)hs.getAttribute("User");
+            double modify_KRW = user.getReservedKRW()+(double)body.get("amount");
+            user.setReservedKRW(modify_KRW);
+            coinModel.depositKRW(user.getUid(), modify_KRW);
+            hs.setAttribute("User",user);
+            jo.addProperty("result","success");
+        }
+        else {
+            jo.addProperty("result", "failed");
+        }
+
         return jo.toString();
     }
 }

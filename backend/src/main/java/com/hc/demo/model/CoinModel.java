@@ -3,7 +3,7 @@ package com.hc.demo.model;
 import com.hc.demo.service.CoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import com.hc.demo.container.User;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,5 +22,9 @@ public class CoinModel {
 
     public List<HashMap<String,Object>> getCoinList(int uid) {
         return coinService.getCoinList(uid);
+    }
+
+    public int depositKRW(int uid, double reservedKRW) {
+        return coinService.depositKRW(uid, reservedKRW);
     }
 }
