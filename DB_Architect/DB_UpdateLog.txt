@@ -1,3 +1,15 @@
+[2024-06-11 Minor Update]
+
+(Revision)
+ERD : 2024061001
+Relational Schema : 2024061101
+
+1. [Schema] Coin Table에 있는 NAME Column을 name으로 변경
+
+끝
+
+---
+
 [2024-06-10 Major Update]
 
 (Revision)
