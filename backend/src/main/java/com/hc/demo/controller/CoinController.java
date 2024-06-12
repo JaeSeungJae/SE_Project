@@ -299,4 +299,57 @@ public class CoinController {
             return jo.toString();
         }
     }
+
+    @PostMapping("/rest/buyCoin")
+    public String buyCoin(HttpServletRequest req, @RequestBody HashMap<String,Object> body) {
+        JsonObject jo = new JsonObject();
+        HttpSession hs = req.getSession(false); // 사용자 세션정보 조회
+        if(hs == null){ // 세션 유무 체크
+            jo.addProperty("result", "failed");
+            System.out.println("null session error");
+            return jo.toString();
+        }
+        try {
+            int result = coinModel.buyCoin( ((User)hs.getAttribute("User")).getUid(),(int)body.get("coin_uid"), (double)body.get("price_amount"));
+            if(result == 0) {
+                jo.addProperty("result", "failed");
+                jo.addProperty("reason", "not enough money");
+                return jo.toString();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+            jo.addProperty("reason", "internal server error");
+            return jo.toString();
+        }
+        jo.addProperty("result", "success");
+        return jo.toString();
+    }
+
+    @PostMapping("/rest/sellCoin")
+    public String sellCoin(HttpServletRequest req, @RequestBody HashMap<String,Object> body) {
+        JsonObject jo = new JsonObject();
+        HttpSession hs = req.getSession(false); // 사용자 세션정보 조회
+        if(hs == null){ // 세션 유무 체크
+            jo.addProperty("result", "failed");
+            System.out.println("null session error");
+            return jo.toString();
+        }
+        try {
+            int result = coinModel.sellCoin( ((User)hs.getAttribute("User")).getUid(),(int)body.get("coin_uid"), (double)body.get("sell_amount"));
+            if(result == 0) {
+                jo.addProperty("result", "failed");
+                jo.addProperty("reason", "not enough coins");
+                return jo.toString();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+            jo.addProperty("reason", "internal server error");
+            return jo.toString();
+        }
+        jo.addProperty("result", "success");
+        return jo.toString();
+    }
+
 }
