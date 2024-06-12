@@ -39,4 +39,22 @@ public class CoinModel {
     public List<HashMap<String, Object>> getCoinPriceInfo(int coin_uid) {
         return coinService.getCoinPriceInfo(coin_uid);
     }
+
+    public int buyCoin(int uid, int coin_uid, double amount) {
+        if(coinService.checkMoney(uid,amount) == 0) {
+            return 0;
+        }
+        coinService.buyCoin(uid, coin_uid, amount);
+        coinService.discountKRW(uid, amount);
+        return 1;
+    }
+
+    public int sellCoin(int uid, int coin_uid, double coin_count) {
+        if(coinService.checkCoin(uid,coin_uid, coin_count) == 0) {
+            return 0;
+        }
+        coinService.sellCoin(uid, coin_uid, coin_count);
+        coinService.addKRW(uid, coin_uid, coin_count);
+        return 1;
+    }
 }

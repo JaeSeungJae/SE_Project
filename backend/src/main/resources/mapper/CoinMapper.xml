@@ -121,4 +121,103 @@
         WHERE
             uid = #{uid}
     </update>
+
+    <select id="getLatestPriceInfo" resultType="double">
+        SELECT
+            closing_price
+        FROM
+            price_info
+        WHERE
+            coin_uid = #{coin_uid}
+        ORDER BY
+            standard_time DESC
+        LIMIT 1;
+    </select>
+
+    <select id="checkMoney" resultType="int">
+        SELECT
+            CASE
+                WHEN reserved_KRW >= #{amount} THEN 1
+                ELSE 0
+            END AS has_enough_balance
+        FROM
+            Member
+        WHERE
+            uid = #{uid};
+    </select>
+
+    <insert id="buyCoin">
+        INSERT INTO Deal (member_uid, coin_uid, contracted_price, contracted_size, contracted_cost)
+        SELECT
+            #{uid},
+            #{coin_uid},
+            latest_price AS contracted_price,
+            #{amount} / latest_price AS contracted_size,
+            #{amount}
+        FROM (
+        SELECT
+            closing_price AS latest_price
+        FROM
+            price_info
+        WHERE
+            coin_uid = #{coin_uid}
+        ORDER BY
+            standard_time DESC
+        LIMIT 1
+        ) AS latest_price_info;
+    </insert>
+
+    <update id="discountKRW">
+        UPDATE Member
+            SET reserved_KRW = reserved_KRW - #{amount}
+        WHERE uid = #{uid};
+    </update>
+
+    <select id="checkCoin" resultType="int">
+        SELECT
+            CASE
+            WHEN COALESCE(SUM(contracted_size), 0) >= #{coin_count} THEN 1
+            ELSE 0
+            END AS can_sell
+        FROM
+            Deal
+        WHERE
+            member_uid = #{uid} AND coin_uid = #{coin_uid};
+    </select>
+
+    <insert id="sellCoin">
+        INSERT INTO Deal (member_uid, coin_uid, contracted_price, contracted_size, contracted_cost)
+        SELECT
+            #{uid},
+            #{coin_uid},
+            -latest_price AS contracted_price,
+            -#{coin_count} AS contracted_size,
+            -#{coin_count} * latest_price AS contracted_cost
+        FROM (
+            SELECT
+                closing_price AS latest_price
+            FROM
+                price_info
+            WHERE
+                coin_uid = #{coin_uid}
+            ORDER BY
+                standard_time DESC
+            LIMIT 1
+        ) AS latest_price_info
+    </insert>
+
+    <update id="addKRW">
+        UPDATE Member
+            SET reserved_KRW = reserved_KRW + (
+        SELECT #{coin_count} * closing_price
+        FROM
+            price_info
+        WHERE
+            coin_uid = #{coin_uid}
+        ORDER BY
+            standard_time DESC
+        LIMIT 1
+        )
+    </update>
+
 </mapper>

@@ -45,4 +45,39 @@ public class CoinService implements CoinDao {
     public List<HashMap<String, Object>> getCoinPriceInfo(int coin_uid) {
         return coinDao.getCoinPriceInfo(coin_uid);
     }
+
+    @Override
+    public double getLatestPriceInfo(int coin_uid) {
+        return coinDao.getLatestPriceInfo(coin_uid);
+    }
+
+    @Override
+    public int checkMoney(int uid, double amount) {
+        return coinDao.checkMoney(uid, amount);
+    }
+
+    @Override
+    public int checkCoin(int uid, int coin_uid, double coin_count) {
+        return coinDao.checkCoin(uid, coin_uid, coin_count);
+    }
+
+    @Override
+    public void buyCoin(int uid, int coin_uid, double amount) {
+        coinDao.buyCoin(uid, coin_uid, amount);
+    }
+
+    @Override
+    public void discountKRW(int uid, double amount) {
+        coinDao.discountKRW(uid, amount);
+    }
+
+    @Override
+    public void sellCoin(int uid, int coin_uid, double coin_count) {
+        coinDao.sellCoin(uid, coin_uid, coin_count);
+    }
+
+    @Override
+    public void addKRW(int uid, int coin_uid, double coin_count) {
+        coinDao.addKRW(uid, coin_uid, coin_count);
+    }
 }

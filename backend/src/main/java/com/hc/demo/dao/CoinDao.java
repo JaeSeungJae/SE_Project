@@ -20,4 +20,19 @@ public interface CoinDao {
     List<HashMap<String, Object>> getCoinPriceInfo (int coin_uid);
 
     int depositKRW(int uid, double reservedKRW);
+
+    double getLatestPriceInfo(int coin_uid);
+
+    int checkMoney(int uid, double amount);
+
+    int checkCoin(int uid, int coin_uid, double coin_count);
+
+    void buyCoin(int uid, int coin_uid, double amount);
+
+    void discountKRW(int uid, double amount);
+
+    void sellCoin(int uid, int coin_uid, double coin_count);
+
+    void addKRW(int uid, int coin_uid, double coin_count);
+
 }
