@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.hc.demo.container.User;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface CoinDao {
@@ -20,4 +21,8 @@ public interface CoinDao {
     List<HashMap<String, Object>> getCoinPriceInfo (int coin_uid);
 
     int depositKRW(int uid, double reservedKRW);
+
+    List<Map<String,Object>> getCoinDeals(int coin_uid);
+
+    List<Map<String,Object>> getMyCoin(int uid);
 }

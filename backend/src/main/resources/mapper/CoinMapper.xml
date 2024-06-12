@@ -121,4 +121,50 @@
         WHERE
             uid = #{uid}
     </update>
+
+    <select id="getCoinDeals" resultType="map">
+        SELECT
+            d.coin_uid, c.name, c.symbol,   d.contracted_price, d.contracted_size,  d.contracted_time
+        FROM
+            Deal as d
+        JOIN
+            Coin as c
+        ON
+            d.coin_uid = c.uid
+        WHERE
+            d.coin_uid = #{coin_uid}
+        ORDER BY
+            d.contracted_time
+    </select>
+
+<!--    코인별로 contracted_cost, size 더하고, 최신 closing_price, name, symbol get-->
+    <select id="getMyCoin" resultType="map">
+        SELECT
+            d.coin_uid,
+            SUM(d.contracted_size) AS total_contracted_size,
+            SUM(d.contracted_cost) AS total_contracted_cost,
+            pi.closing_price,
+            c.symbol,
+            c.name
+        FROM
+            Deal d
+        JOIN
+            price_info pi ON d.coin_uid = pi.coin_uid
+        JOIN
+        (
+            SELECT
+                coin_uid,
+                MAX(standard_time) AS max_standard_time
+            FROM
+                price_info
+            GROUP BY
+                coin_uid
+        ) recent_pi ON pi.coin_uid = recent_pi.coin_uid AND pi.standard_time = recent_pi.max_standard_time
+        JOIN
+            Coin c ON d.coin_uid = c.uid
+        WHERE
+            d.member_uid = #{uid}
+        GROUP BY
+            d.coin_uid, pi.closing_price, c.symbol, c.name;
+    </select>
 </mapper>

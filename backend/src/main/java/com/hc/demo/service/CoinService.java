@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.hc.demo.container.User;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CoinService implements CoinDao {
@@ -44,5 +45,15 @@ public class CoinService implements CoinDao {
     @Override
     public List<HashMap<String, Object>> getCoinPriceInfo(int coin_uid) {
         return coinDao.getCoinPriceInfo(coin_uid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getCoinDeals(int coin_uid) {
+        return coinDao.getCoinDeals(coin_uid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMyCoin(int uid) {
+        return coinDao.getMyCoin(uid);
     }
 }

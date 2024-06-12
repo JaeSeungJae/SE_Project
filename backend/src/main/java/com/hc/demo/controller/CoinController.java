@@ -10,9 +10,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CoinController {
@@ -224,5 +225,78 @@ public class CoinController {
         jo.addProperty("result", "success");
         jo.add("data",ja);
         return jo.toString();
+    }
+
+    @GetMapping("/rest/getCoinDeals")
+    public String getCoinDeals(HttpServletRequest req, @RequestParam(value = "coin_uid") int coin_uid) {
+        HttpSession hs = req.getSession();
+        JsonObject jo = new JsonObject();
+        JsonArray ja = new JsonArray();
+        try {
+
+            List<Map<String,Object>> deals = coinModel.getCoinDeals(coin_uid);
+//            System.out.println(deals);
+            for (Map<String,Object> deal : deals) {
+                JsonObject item = new JsonObject();
+                item.addProperty("coin_uid", deal.get("coin_uid").toString());
+                item.addProperty("coin_name", deal.get("name").toString());
+                item.addProperty("coin_symbol", deal.get("symbol").toString());
+                item.addProperty("unit_price", deal.get("contracted_price").toString());
+                item.addProperty("unit_count", deal.get("contracted_size").toString());
+                item.addProperty("contracted_time", deal.get("contracted_time").toString());
+                ja.add(item);
+            }
+            jo.addProperty("result", "success");
+            jo.add("data", ja);
+            return jo.toString();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+//            jo.add("data", ja);
+            return jo.toString();
+        }
+    }
+
+    @GetMapping("/rest/getMyCoin")
+    public String getMyCoin(HttpServletRequest req) {
+        HttpSession hs = req.getSession();
+        JsonObject jo = new JsonObject();
+        JsonArray ja = new JsonArray();
+        if (hs != null && hs.getAttribute("Logged") != null && (Boolean) hs.getAttribute("Logged")) {
+            try {
+                User user = (User) hs.getAttribute("User");
+                List<Map<String, Object>> mycoins = coinModel.getMyCoin(user.getUid());
+                System.out.println(mycoins);
+                for (Map<String, Object> mycoin : mycoins) {
+                    JsonObject item = new JsonObject();
+                    double total_cost = ((BigDecimal)mycoin.get("total_contracted_cost")).doubleValue();
+                    double total_size = ((BigDecimal)mycoin.get("total_contracted_size")).doubleValue();
+                    double curr_price = ((BigDecimal)mycoin.get("closing_price")).doubleValue();
+                    double count = ((BigDecimal)mycoin.get("total_contracted_size")).doubleValue();
+
+                    item.addProperty("coin_uid", mycoin.get("coin_uid").toString());
+                    item.addProperty("coin_name", mycoin.get("name").toString());
+                    item.addProperty("coin_symbol", mycoin.get("symbol").toString());
+                    item.addProperty("gain_loss_amount", String.format("%.2f",(curr_price * total_size) - total_cost));
+                    item.addProperty("gain_loss_percent", String.format("%.2f",(((curr_price * total_size) - total_cost) / total_cost) * 100));
+                    item.addProperty("count", String.format("%.2f", count));
+                    item.addProperty("eval_price", String.format("%.2f",curr_price * total_size));
+                    item.addProperty("avg_unit_price", String.format("%.2f",total_cost / total_size));
+                    item.addProperty("current_unit_price", String.format("%.2f", curr_price));
+                    ja.add(item);
+                }
+                jo.addProperty("result", "success");
+                jo.add("data", ja);
+                return jo.toString();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                jo.addProperty("result", "failed");
+                //            jo.add("data", ja);
+                return jo.toString();
+            }
+        } else {
+            jo.addProperty("result", "failed");
+            return jo.toString();
+        }
     }
 }

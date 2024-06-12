@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.hc.demo.container.User;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class CoinModel {
@@ -38,5 +39,13 @@ public class CoinModel {
 
     public List<HashMap<String, Object>> getCoinPriceInfo(int coin_uid) {
         return coinService.getCoinPriceInfo(coin_uid);
+    }
+
+    public List<Map<String,Object>> getCoinDeals(int coin_uid) {
+        return coinService.getCoinDeals(coin_uid);
+    }
+
+    public List<Map<String,Object>> getMyCoin(int uid) {
+        return coinService.getMyCoin(uid);
     }
 }
