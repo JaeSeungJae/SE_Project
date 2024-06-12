@@ -7,7 +7,7 @@ const MenuBar = () => {
     return (
         <div className={cx("menu-bar")}>
             <div>
-                <h1>KW Coin</h1>
+                <h1>KW Coin1</h1>
             </div>
             <div className={cx("menu-page")}>
                 <ul>
