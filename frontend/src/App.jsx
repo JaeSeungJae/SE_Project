@@ -5,7 +5,9 @@ import Join from './pages/auth/join/Join'
 import CoinPrice from './pages/market/coinPrice/coinPrice';
 import MarketTrend from './pages/market/marketTrend/marketTrend';
 import Board from './pages/market/board/board';
-import MainPage from './pages/mainPage/MainPage'
+import MainPage from './pages/mainPage/MainPage';
+import EditProfile from './pages/myPage/editProfile/EditProfile';
+import DeleteProfile from './pages/myPage/deleteProfile/DeleteProfile'
 
 function App() {
 
@@ -19,6 +21,9 @@ function App() {
         <Route path="/board" element={< Board />} />
         <Route path="/mainpage" element={< MainPage />} />
         <Route path="/" element={< MainPage />} />
+        <Route path="/mypage/editProfile" element={<EditProfile/>}/>
+        <Route path="/mypage/deleteProfile" element={<DeleteProfile/>}/>
+        
       </Routes>
     </BrowserRouter>
   )
