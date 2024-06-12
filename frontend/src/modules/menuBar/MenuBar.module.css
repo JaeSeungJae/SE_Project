@@ -1,9 +1,14 @@
 ul {list-style: none;}
 
 .menu-bar{
-    display: flex;
+    display: grid;
+    grid-template-columns: 20% 50% 30%;
     align-items: baseline;
     border-bottom: 1px solid white;
+}
+
+.menu-bar h1{
+    cursor: pointer;
 }
 
 .menu-page{
@@ -28,9 +33,8 @@ ul {list-style: none;}
 }
 
 .user-fnc{
-    width: 430px;
-    display: flex;
-    justify-content: right;
+    text-align: right;
+    margin: 10px;
 }
 
 .user-fnc ul li{
