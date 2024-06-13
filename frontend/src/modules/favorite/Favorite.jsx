@@ -11,22 +11,20 @@ const Favorite = () => {
 
     const [coinList, setCoinList] = useState([]);
     useEffect(() => {
-        axios.get("https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/getCoinList")
-            .then(response => {
-                console.log(response.data.data)
-                setCoinList(response.data.data)
-            })
-            .catch(error => {
-                console.error("Error!!", error);
-            });
+        const fetchData = async () =>{
+            try{
+                const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getCoinList');
+                if(response.data.result !== false){
+                    const filter_data = coinList.filter(item => item.is_favorite === "1")
+                    setCoinList(filter_data)
+                }
+                console.log(response.data);
+            }catch(error){
+                console.error('Error fetching data(Favorites):',error);
+            }
+        };
+        fetchData();
     }, [])
-
-    const [favorite_Data, setFavorite_Data] = useState([]);
-
-    useEffect(() => {
-        const filter_data= coinList.filter(item => item.is_favorite === "1")
-        setFavorite_Data(filter_data);
-    }, [coinList])
 
     return (
         <div className={cx("hot-coin")}>
@@ -46,7 +44,7 @@ const Favorite = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {favorite_Data.slice(0, 5).map((coin) => (
+                    {coinList.slice(0, 5).map((coin) => (
                         <tr key={coin.coin_uid}>
                             <td className={cx("column-name")}>
                                 <div>{coin.coin_name}</div>

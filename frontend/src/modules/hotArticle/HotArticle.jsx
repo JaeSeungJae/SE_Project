@@ -11,14 +11,16 @@ const HotArticle = () =>{
     const [hotArticle_data,setHotArticle_Data] = useState([]);
 
     useEffect(()=>{
-        axios.get("https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/getHotArticles")
-            .then(response => {
-                console.log(response.data.data)
+        const fetchData = async () =>{
+            try{
+                const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getHotArticles');
+                console.log(response.data);
                 setHotArticle_Data(response.data.data)
-            })
-            .catch(error => {
-                console.error("Error!!", error);
-            });
+            }catch(error){
+                console.error('Error fetching data(HotArticles):',error);
+            }
+        };
+        fetchData();
     },[])
 
 
