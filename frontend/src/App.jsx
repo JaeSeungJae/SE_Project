@@ -9,6 +9,9 @@ import MainPage from './pages/mainPage/MainPage';
 import EditProfile from './pages/myPage/editProfile/EditProfile';
 import DeleteProfile from './pages/myPage/deleteProfile/DeleteProfile'
 import Balance from './pages/investment/balance/Balance';
+import BoardDetail from './pages/market/board/boardDetail';
+import BoardWrite from './pages/market/board/boardWrite';
+import BoardModify from './pages/market/board/boardModify';
 
 function App() {
 
@@ -21,6 +24,9 @@ function App() {
         <Route path="/markettrend" element={< MarketTrend />} />
         <Route path="/board" element={< Board />} />
         <Route path="/mainpage" element={< MainPage />} />
+        <Route path="/board/:id" element={< BoardDetail />} />
+        <Route path="/board/write" element={< BoardWrite />} />
+        <Route path="/board/modify" element={< BoardModify />} />
         <Route path="/" element={< MainPage />} />
         <Route path="/mypage/editProfile" element={<EditProfile/>}/>
         <Route path="/mypage/deleteProfile" element={<DeleteProfile/>}/>
