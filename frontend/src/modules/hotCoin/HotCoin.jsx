@@ -1,18 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./HotCoin.module.css"
 import className from "classnames/bind"
+import axios from "axios";
 
 const cx = className.bind(styles);
 
 const HotCoin = () => {
 
-    const hotCoin_Data = [
-        { coin_uid: 1, coin_name: "비트코인", coin_symbol: "BTC", current_unit_price: 10000, fluc_percent: 10.01, fluc_amount: 1000 },
-        { coin_uid: 2, coin_name: "이더리움", coin_symbol: "ETH", current_unit_price: 20000, fluc_percent: -20.01, fluc_amount: -2000 },
-        { coin_uid: 3, coin_name: "리플", coin_symbol: "XRP", current_unit_price: 30000, fluc_percent: 30.01, fluc_amount: 3000 },
-        { coin_uid: 4, coin_name: "솔라나", coin_symbol: "SOL", current_unit_price: 40000, fluc_percent: -40.01, fluc_amount: -4000 },
-        { coin_uid: 5, coin_name: "도지코인", coin_symbol: "DOGE", current_unit_price: 50000, fluc_percent: 50.01, fluc_amount: 5000 },
-    ]
+    const [hotCoin_Data,setHotCoin_Data] = useState([]);
+
+    useEffect(()=>{
+        axios.get("https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/getHotCoinList")
+            .then(response => {
+                console.log(response.data.data)
+                setHotCoin_Data(response.data.data)
+            })
+            .catch(error => {
+                console.error("Error!!", error);
+            });
+    },[])
 
     return (
         <div className={cx("hot-coin")}>
