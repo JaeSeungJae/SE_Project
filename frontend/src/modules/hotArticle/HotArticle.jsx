@@ -1,17 +1,25 @@
 import React from "react";
 import className from "classnames/bind"
 import styles from "./HotArticle.module.css"
+import { useState,useEffect } from "react";
+import axios from "axios";
 
 const cx = className.bind(styles);
 
 const HotArticle = () =>{
-    const hotArticle_data = [
-        {article_uid: 1, title: "한강 가즈아", hits: 4444},
-        {article_uid: 2, title: "한강 수온", hits: 1},
-        {article_uid: 3, title: "그 언젠가 나를 위해 꽃다발을 전해주던 그 소녀", hits: 99},
-        {article_uid: 4, title: "하루에 4번 사랑을 말하고 8번 웃고 6번의 키스를 해줘", hits: 486},
-        {article_uid: 5, title: "히히 오줌 발싸", hits: 12345}
-    ]
+
+    const [hotArticle_data,setHotArticle_Data] = useState([]);
+
+    useEffect(()=>{
+        axios.get("https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/getHotArticles")
+            .then(response => {
+                console.log(response.data.data)
+                setHotArticle_Data(response.data.data)
+            })
+            .catch(error => {
+                console.error("Error!!", error);
+            });
+    },[])
 
 
     return(

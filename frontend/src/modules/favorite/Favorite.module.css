@@ -47,19 +47,19 @@
 }
 
 .coin-price.positive{
-    color: blue
+    color: red
 }
 
 .coin-price.negative{
-    color: red
-}
-
-.coin-fluc-percent.positive{
     color: blue
 }
 
-.coin-fluc-percent.negative{
+.coin-fluc-percent.positive{
     color: red
+}
+
+.coin-fluc-percent.negative{
+    color: blue
 }
 
 .coin-fluc-amount{
@@ -67,9 +67,9 @@
 }
 
 .coin-fluc-amount.positive{
-    color: blue
+    color: red
 }
 
 .coin-fluc-amount.negative{
-    color: red
+    color: blue
 }

@@ -1,0 +1,14 @@
+.balance-container{
+    text-align: left;
+}
+.balance{
+    display: grid;
+    grid-template-columns: 20% 20%;
+    color: white;
+}
+
+.balance-won{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    margin-right: 50px;
+}

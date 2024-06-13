@@ -11,6 +11,8 @@ import className from "classnames/bind"
 const cx = className.bind(styles)
 
 const MainPage = () =>{
+    
+
     return(
         <div>
             <MenuBar/>

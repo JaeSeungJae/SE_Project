@@ -4,7 +4,7 @@ import styles from "./InputBox.module.css"
 
 const cx = className.bind(styles)
 
-const InputBox = ({boxName, boxType, boxPlaceHolder, value, onChange, required}) => {
+const InputBox = ({boxName, boxType, boxPlaceHolder, value, onChange, required, disabled}) => {
     return (
         <div className={cx("container")}>
             <p>{boxName}</p>
@@ -14,6 +14,7 @@ const InputBox = ({boxName, boxType, boxPlaceHolder, value, onChange, required})
                 placeholder={boxPlaceHolder}
                 value={value}
                 onChange={onChange}
+                disabled={disabled}
                 required={required}></input>
         </div>
     )
