@@ -21,12 +21,12 @@
 }
 
 .column-title{
-    width: 80%;
+    width: 75%;
     padding: 0px 10px;
 }
 
 .column-hits{
-    width: 10%;
+    width: 15%;
     text-align: right;
     padding: 0px 10px;
 }

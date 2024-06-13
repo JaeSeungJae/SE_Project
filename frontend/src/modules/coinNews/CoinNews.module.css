@@ -12,6 +12,7 @@
     background-color: lightgray;
     height: 80px;
     border-radius: 20px;
+    overflow: hidden;
 }
 
 .news-frame h3{
