@@ -4,14 +4,14 @@ import styles from "./EditProfile.module.css";
 import InputBox from '../../../modules/inputBox/InputBox';
 import MenuBar from "../../../modules/menuBar/MenuBar";
 import { useNavigate } from "react-router-dom";
-import {getUserInfo} from "../../../hooks/getUserInfo/getUserInfo";
+import { getUserInfo } from "../../../hooks/getUserInfo/getUserInfo";
 import axios from "axios";
 
 const cx = className.bind(styles)
 
 const EditProfile = () => {
     const movePage = useNavigate();
-    const handleDeleteProfile = () =>{
+    const handleDeleteProfile = () => {
         movePage("/mypage/deleteProfile")
     }
 
@@ -28,39 +28,41 @@ const EditProfile = () => {
             alert('패스워드가 일치하지 않습니다');
             return;
         }
-        axios.post('http://bitcoin-kw.namisnt.com:8082/rest/modifyMemberInfo',{
-            pw: {userPW},
-            name: {userName},
-            nickname: {userNickname},
-          })
-          .then(response =>{
-            if(response.data.result === 'success'){
-              alert('회원정보 수정이 정상적으로 처리되었습니다.')
-              movePage('/mainpage')
-            }else{
-              alert('회원정보 수정에 문제가 생겼습니다.');
+        const fetchData = async () => {
+            try {
+                const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/modifyMemberInfo', {
+                    pw: `${userPW }`,
+                    name: `${userName}`,
+                    nickname: `${userNickname}`,
+                });
+                if (response.data.result === 'success') {
+                    alert('회원정보 수정이 정상적으로 처리되었습니다.')
+                    movePage('/mainpage')
+                } else {
+                    alert('회원정보 수정에 문제가 생겼습니다.');
+                }
+            } catch (error) {
+                console.error('Error fetching data(EditProfile):', error);
             }
-          })
-          .catch(error =>{
-            console.error("Error!!",error);
-          });
+        };
+        fetchData();
     }
 
-    useEffect(()=>{
-        const checkName = async () =>{
+    useEffect(() => {
+        const checkName = async () => {
             const userInfo = await getUserInfo();
-            
+
             setUserID(userInfo.data.id);
         };
         checkName();
-    },[])
+    }, [])
 
     return (
         <div>
             <MenuBar />
             <div className={cx("container")}>
                 <div className={cx("button-container")}>
-                    <button style={{backgroundColor:"green", marginLeft:"10px"}}>정보 수정</button>
+                    <button style={{ backgroundColor: "green", marginLeft: "10px" }}>정보 수정</button>
                     <button onClick={handleDeleteProfile}>회원 탈퇴</button>
                 </div>
                 <form className={cx("login-form")} onSubmit={submitEdit}>

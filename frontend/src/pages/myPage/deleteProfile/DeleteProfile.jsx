@@ -8,7 +8,7 @@ import axios from "axios";
 
 const cx = className.bind(styles)
 
-const EditProfile = () => {
+const DeleteProfile = () => {
     const movePage = useNavigate();
 
     const handleEditProgile = () => {
@@ -18,18 +18,20 @@ const EditProfile = () => {
     const submitDelete = async (e) => {
         e.preventDefault();
 
-        axios.post('http://bitcoin-kw.namisnt.com:8082/rest/deleteMember')
-            .then(response => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/deleteMember');
                 if (response.data.result === 'success') {
                     alert('회원 탈퇴가 정상적으로 처리되었습니다.')
                     movePage('/login')
                 } else {
                     alert('회원 탈퇴에 문제가 생겼습니다.');
                 }
-            })
-            .catch(error => {
-                console.error("Error!!", error);
-            });
+            } catch (error) {
+                console.error('Error fetching data(DeleteMember):', error);
+            }
+        };
+        fetchData();
     }
 
     return (
@@ -55,4 +57,4 @@ const EditProfile = () => {
     );
 }
 
-export default EditProfile
+export default DeleteProfile

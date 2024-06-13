@@ -19,33 +19,51 @@ const Balance = () => {
 
     const [rechargeWon, setRechargeWon] = useState();
 
-    const testData = [
-        { "coin_uid": 1, "coin_name": "비트코인", "coin_symbol": "BTC", "gain_loss_amount": 1000, "gain_loss_percent": 20, "count": 10, "eval_price": 10000, "avg_unit_price": 20000, "current_unit_price": 10000 },
-        { "coin_uid": 2, "coin_name": "비트코인", "coin_symbol": "BTC", "gain_loss_amount": -2000, "gain_loss_percent": -30, "count": 20, "eval_price": 20000, "avg_unit_price": 30000, "current_unit_price": 20000 },
-        { "coin_uid": 3, "coin_name": "비트코인", "coin_symbol": "BTC", "gain_loss_amount": -3000, "gain_loss_percent": -40, "count": 30, "eval_price": 30000, "avg_unit_price": 40000, "current_unit_price": 30000 },
-        { "coin_uid": 4, "coin_name": "비트코인", "coin_symbol": "BTC", "gain_loss_amount": -4000, "gain_loss_percent": -50, "count": 40, "eval_price": 40000, "avg_unit_price": 50000, "current_unit_price": 40000 },
-        { "coin_uid": 5, "coin_name": "비트코인", "coin_symbol": "BTC", "gain_loss_amount": -5000, "gain_loss_percent": -60, "count": 50, "eval_price": 50000, "avg_unit_price": 60000, "current_unit_price": 50000 },
-        { "coin_uid": 6, "coin_name": "비트코인", "coin_symbol": "BTC", "gain_loss_amount": -6000, "gain_loss_percent": -70, "count": 60, "eval_price": 60000, "avg_unit_price": 70000, "current_unit_price": 60000 }
-    ]
+
+    /**getMyKRW & getMyCoin */
+    useEffect(() => {
+        /**패치 */
+        const fetchData = async () => {
+            try {
+                const responseKRW = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getMyKRW');
+                if (responseKRW.data.result === 'success') {
+                    setBalanceWon(responseKRW.data.amount)
+                    console.log(responseKRW.data)
+                } else {
+                    alert('getMYKRW failed. please try again');
+                }
+                const responseCoin = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getMyCoin');
+                if (responseCoin.data.result === 'success') {
+                    setCoinData(responseCoin.data.data)
+                    console.log(responseCoin.data)
+                } else {
+                    alert('getMyCoin failed. Please try again');
+                }
+            } catch (error) {
+                console.error('Error fetching data(getMyKRW or getMyCoin):', error);
+            }
+        };
+        fetchData();
+    }, [])
 
     useEffect(() => {
         setBalanceTotal(balanceWon + totalValuation)
     }, [balanceWon, totalValuation]);
 
     useEffect(() => {
-        const purchaseCal = testData.reduce((acc, item) => acc + (item.count * item.avg_unit_price), 0);
+        const purchaseCal = coinData.reduce((acc, item) => acc + (item.count * item.avg_unit_price), 0);
         setTotalPurchase(purchaseCal);
-    }, [testData]);
+    }, [coinData]);
 
     useEffect(() => {
-        const evalCal = testData.reduce((acc, item) => acc + (item.count * item.eval_price), 0);
+        const evalCal = coinData.reduce((acc, item) => acc + (item.count * item.eval_price), 0);
         setTotalValuation(evalCal);
-    }, [testData]);
+    }, [coinData]);
 
     useEffect(() => {
-        const gainLossCal = testData.reduce((acc, item) => acc + item.gain_loss_amount, 0);
+        const gainLossCal = coinData.reduce((acc, item) => acc + item.gain_loss_amount, 0);
         setTotalGainLoss(gainLossCal);
-    }, [testData]);
+    }, [coinData]);
 
     useEffect(() => {
         const gainLossPercentCal = (totalGainLoss / totalPurchase);
@@ -60,7 +78,7 @@ const Balance = () => {
 
     const handleRecharge = (event) => {
         const inputValue = event.target.value;
-        if (!inputValue || /^[0-9\b]+$/.test(inputValue)) {
+        if (!inputValue || /^[0-9\b.]+$/.test(inputValue)) {
             setRechargeWon(inputValue);
         }
     }
@@ -71,8 +89,25 @@ const Balance = () => {
         }
     };
 
-    const rechargeButton = () =>{
-        window.location.reload();
+    const rechargeButton = () => {
+        const fetchData = async () => {
+            try {
+                console.log(rechargeWon);
+                let amount = parseFloat(rechargeWon);
+                const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/depositKRW', {
+                    amount: amount
+                });
+                if (response.data.result === 'success') {
+                    window.location.reload();
+                } else {
+                    alert('Recharge failed. Please try again');
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Error fetching data(Recharge):', error);
+            }
+        };
+        fetchData();
     }
 
 
@@ -86,13 +121,15 @@ const Balance = () => {
                     {isOpen && (
                         <div className={cx("popup")}>
                             <div className={cx("popup-inner")}>
-                                <h2>원화 충전</h2>
-                                <p>충전 금액을 입력하시오.</p>
-                                <input className={cx("input-number")} type="number" placeholder="Enter a number" value={rechargeWon} onChange={handleRecharge} onKeyDown={handleKeyDown}></input>
-                                <div className={cx("button-container")}>
-                                    <button onClick={rechargeButton} style={{ backgroundColor: "green" }}>충전</button>
-                                    <button onClick={togglePopup}>Close</button>
-                                </div>
+                                <form onSubmit={rechargeButton}>
+                                    <h2>원화 충전</h2>
+                                    <p>충전 금액을 입력하시오.</p>
+                                    <input className={cx("input-number")} type="number" placeholder="Enter a number" value={rechargeWon} onChange={handleRecharge} onKeyDown={handleKeyDown} step="0.1"></input>
+                                    <div className={cx("button-container")}>
+                                        <button type="submit" style={{ backgroundColor: "green" }}>충전</button>
+                                        <button onClick={togglePopup}>Close</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     )}
@@ -156,7 +193,7 @@ const Balance = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {testData.map((coin) => (
+                                {coinData.map((coin) => (
                                     <tr key={coin.coin_uid}>
                                         <td className={cx("column-format")}>
                                             <div>{coin.coin_name}</div>
@@ -178,7 +215,7 @@ const Balance = () => {
                                             <div className={cx("color-format", { positive: coin.gain_loss_percent > 0, negative: coin.gain_loss_percent < 0 })}>
                                                 {coin.gain_loss_percent > 0 ? `+${coin.gain_loss_percent}` : `${coin.gain_loss_percent}`} %
                                             </div>
-                                            <div style={{fontSize:"10px"}} className={cx("color-format", { positive: coin.gain_loss_amount > 0, negative: coin.gain_loss_amount < 0 })}>
+                                            <div style={{ fontSize: "10px" }} className={cx("color-format", { positive: coin.gain_loss_amount > 0, negative: coin.gain_loss_amount < 0 })}>
                                                 {coin.gain_loss_amount.toLocaleString()}
                                             </div>
                                         </td>
