@@ -18,21 +18,23 @@ const Login = () => {
 
   const submitLogin = async (e) => {
     e.preventDefault();
-    
-    axios.post('http://bitcoin-kw.namisnt.com:8082/rest/login',{
-      id,
-      pw
-    })
-    .then(response =>{
-      if(response.data.result === 'success'){
-        movePage('/mainpage')
-      }else{
-        alert('Login failed. Please try again');
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/login', {
+          id,
+          pw
+        });
+        if(response.data.result === 'success'){
+          movePage('/mainpage');
+        }else{
+          alert('Login failed. Please try again');
+        }
+      } catch (error) {
+        console.error('Error fetching data(Login):', error);
       }
-    })
-    .catch(error =>{
-      console.error("Error!!",error);
-    });
+    };
+    fetchData();
   };
 
 
