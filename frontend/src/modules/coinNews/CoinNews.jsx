@@ -9,14 +9,16 @@ const CoinNews = () => {
     const [newsData,setNewsData] =useState([]);
 
     useEffect(()=>{
-        axios.get("https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/getCoinNews")
-            .then(response => {
-                console.log(response.data.items)
+        const fetchData = async () =>{
+            try{
+                const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getCoinNews');
+                console.log(response.data.items);
                 setNewsData(response.data.items)
-            })
-            .catch(error => {
-                console.error("Error!!", error);
-            });
+            }catch(error){
+                console.error('Error fetching data(CoinNews):',error);
+            }
+        };
+        fetchData();
     },[])
 
 

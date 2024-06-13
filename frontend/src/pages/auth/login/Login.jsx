@@ -13,16 +13,15 @@ const Login = () => {
     movePage('/join');
   }
 
-  const [userID, setUserID] = useState('');
-  const [userPW, setUserPW] = useState('');
+  const [id, setID] = useState('');
+  const [pw, setPW] = useState('');
 
   const submitLogin = async (e) => {
     e.preventDefault();
-    console.log(userID + userPW);
     
-    axios.post('https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/login',{
-      id: `${userID}`,
-      pw: `${userPW}`,
+    axios.post('http://bitcoin-kw.namisnt.com:8082/rest/login',{
+      id,
+      pw
     })
     .then(response =>{
       if(response.data.result === 'success'){
@@ -42,8 +41,8 @@ const Login = () => {
       <div className={cx("container")}>
         <h1>회원 로그인</h1>
         <form className={cx("login-form")} onSubmit={submitLogin}>
-          <InputBox boxName="ID" boxType="text" boxPlaceHolder="ID를 입력하세요" value={userID} onChange={(e) => setUserID(e.target.value)} required />
-          <InputBox boxName="Password" boxType="password" boxPlaceHolder="패스워드를 입력하세요" value={userPW} onChange={(e) => setUserPW(e.target.value)} required/>
+          <InputBox boxName="ID" boxType="text" boxPlaceHolder="ID를 입력하세요" value={id} onChange={(e) => setID(e.target.value)} required />
+          <InputBox boxName="Password" boxType="password" boxPlaceHolder="패스워드를 입력하세요" value={pw} onChange={(e) => setPW(e.target.value)} required/>
           <div>
             <button type='submit'>Login</button>
             <button onClick={handleJoin}>Join</button>

@@ -18,7 +18,7 @@ const EditProfile = () => {
     const submitDelete = async (e) => {
         e.preventDefault();
 
-        axios.post('https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/deleteMember')
+        axios.post('http://bitcoin-kw.namisnt.com:8082/rest/deleteMember')
             .then(response => {
                 if (response.data.result === 'success') {
                     alert('회원 탈퇴가 정상적으로 처리되었습니다.')

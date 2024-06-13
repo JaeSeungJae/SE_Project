@@ -28,7 +28,7 @@ const EditProfile = () => {
             alert('패스워드가 일치하지 않습니다');
             return;
         }
-        axios.post('https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/modifyMemberInfo',{
+        axios.post('http://bitcoin-kw.namisnt.com:8082/rest/modifyMemberInfo',{
             pw: {userPW},
             name: {userName},
             nickname: {userNickname},
