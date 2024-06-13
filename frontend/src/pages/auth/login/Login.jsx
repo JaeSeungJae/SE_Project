@@ -21,8 +21,8 @@ const Login = () => {
     console.log(userID + userPW);
     
     axios.post('https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/login',{
-      id: {userID},
-      pw: {userPW},
+      id: `${userID}`,
+      pw: `${userPW}`,
     })
     .then(response =>{
       if(response.data.result === 'success'){

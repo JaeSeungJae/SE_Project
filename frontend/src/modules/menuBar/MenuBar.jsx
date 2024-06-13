@@ -55,6 +55,9 @@ const MenuBar = () => {
     const handleMarketTrend = () => {
         movePage("/markettrend")
     }
+    const handleInvestment = () => {
+        movePage("/investment/balance")
+    }
 
     return (
         <div className={cx("menu-bar")}>
@@ -67,7 +70,7 @@ const MenuBar = () => {
                         <a onClick={handleCoinMarket}>코인 시세/거래</a>
                     </li>
                     <li>
-                        <a>투자 내역</a>
+                        <a onClick={handleInvestment}>투자 내역</a>
                     </li>
                     <li>
                         <a>종목 토론 게시판</a>

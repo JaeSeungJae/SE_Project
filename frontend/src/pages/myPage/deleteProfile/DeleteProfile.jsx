@@ -42,7 +42,7 @@ const EditProfile = () => {
                 </div>
                 <form className={cx("login-form")} onSubmit={submitDelete}>
                     <div className={cx("item-container")}>
-                        <p>진짜 회원 탈퇴 할겨?</p>
+                        <p>아래 버튼을 누르시면 회원 탈퇴를 할 수 있습니다.</p>
                     </div>
 
                     <div className={cx("item-container")}>
