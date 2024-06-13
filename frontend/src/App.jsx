@@ -8,6 +8,7 @@ import Board from './pages/market/board/board';
 import MainPage from './pages/mainPage/MainPage';
 import EditProfile from './pages/myPage/editProfile/EditProfile';
 import DeleteProfile from './pages/myPage/deleteProfile/DeleteProfile'
+import Balance from './pages/investment/balance/Balance';
 import BoardDetail from './pages/market/board/boardDetail';
 import BoardWrite from './pages/market/board/boardWrite';
 import BoardModify from './pages/market/board/boardModify';
@@ -29,7 +30,7 @@ function App() {
         <Route path="/" element={< MainPage />} />
         <Route path="/mypage/editProfile" element={<EditProfile/>}/>
         <Route path="/mypage/deleteProfile" element={<DeleteProfile/>}/>
-        
+        <Route path="/investment/balance" element={<Balance/>}/>
       </Routes>
     </BrowserRouter>
   )

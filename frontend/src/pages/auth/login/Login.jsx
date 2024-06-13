@@ -3,6 +3,7 @@ import className from "classnames/bind"
 import styles from "./Login.module.css"
 import InputBox from '../../../modules/inputBox/InputBox';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const cx = className.bind(styles)
 
@@ -18,8 +19,22 @@ const Login = () => {
   const submitLogin = async (e) => {
     e.preventDefault();
     console.log(userID + userPW);
-    movePage('/mainpage')
-  }
+    
+    axios.post('https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/login',{
+      id: `${userID}`,
+      pw: `${userPW}`,
+    })
+    .then(response =>{
+      if(response.data.result === 'success'){
+        movePage('/mainpage')
+      }else{
+        alert('Login failed. Please try again');
+      }
+    })
+    .catch(error =>{
+      console.error("Error!!",error);
+    });
+  };
 
 
   return (

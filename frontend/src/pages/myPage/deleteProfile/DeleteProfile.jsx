@@ -4,31 +4,32 @@ import styles from "./DeleteProfile.module.css";
 import InputBox from '../../../modules/inputBox/InputBox';
 import MenuBar from "../../../modules/menuBar/MenuBar";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const cx = className.bind(styles)
 
 const EditProfile = () => {
     const movePage = useNavigate();
 
-    const handleEditProgile = () =>{
+    const handleEditProgile = () => {
         movePage("/mypage/editProfile")
     }
 
-
-    const [userID, setUserID] = useState('');
-    const [userPW, setUserPW] = useState('');
-    const [userRePW, setUserRePW] = useState('');
-    const [userName, setUserName] = useState('');
-    const [userPhone, setUserPhone] = useState('');
-    const [userNickname, setUserNickname] = useState('');
-
-    const submitJoin = async (e) => {
+    const submitDelete = async (e) => {
         e.preventDefault();
-        console.log(`${userID} ${userPW} ${userRePW} ${userName} ${userPhone} ${userNickname}`)
-        if (userPW != userRePW) {
-            alert('패스워드가 일치하지 않습니다??');
-            return;
-        }
+
+        axios.post('https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/deleteMember')
+            .then(response => {
+                if (response.data.result === 'success') {
+                    alert('회원 탈퇴가 정상적으로 처리되었습니다.')
+                    movePage('/login')
+                } else {
+                    alert('회원 탈퇴에 문제가 생겼습니다.');
+                }
+            })
+            .catch(error => {
+                console.error("Error!!", error);
+            });
     }
 
     return (
@@ -36,14 +37,14 @@ const EditProfile = () => {
             <MenuBar />
             <div className={cx("container")}>
                 <div className={cx("button-container")}>
-                    <button onClick={handleEditProgile} style={{marginLeft:"10px"}}>정보 수정</button>
-                    <button style={{backgroundColor:"green"}}>회원 탈퇴</button>
+                    <button onClick={handleEditProgile} style={{ marginLeft: "10px" }}>정보 수정</button>
+                    <button style={{ backgroundColor: "green" }}>회원 탈퇴</button>
                 </div>
-                <form className={cx("login-form")} onSubmit={submitJoin}>
+                <form className={cx("login-form")} onSubmit={submitDelete}>
                     <div className={cx("item-container")}>
-                        <p>진짜 회원 탈퇴 할겨?</p>
+                        <p>아래 버튼을 누르시면 회원 탈퇴를 할 수 있습니다.</p>
                     </div>
-                    
+
                     <div className={cx("item-container")}>
                         <button type='submit'>회원 탈퇴</button>
                     </div>
