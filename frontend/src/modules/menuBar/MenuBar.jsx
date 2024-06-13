@@ -13,7 +13,7 @@ const MenuBar = () => {
     }
 
     const [isAuth, setIsAuth] = useState(null);
-
+/*
     useEffect(()=>{
         const checkAuth = async () =>{
             const userInfo = await getUserInfo();
@@ -23,28 +23,29 @@ const MenuBar = () => {
         checkAuth();
     },[]);
 
-    
+    /*
     useEffect(()=>{
         if (isAuth === false){
             alert("로그인 후 이용하시길 바랍니다.")
             movePage("/login")
         }
-    },[isAuth])
+    },[isAuth])*/
 
 
     const handleLogOut = () => {
-        axios.get('https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/logout')
-            .then(response => {
-                if (response.data.result === 'success') {
+        const fetchData = async () =>{
+            try{
+                const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/logout');
+                if(response.data.result ==='success'){
                     movePage('/login')
-                } else {
-                    alert('logout failed. Please try again');
+                } else{
+                    alert('logout failed. please try again');
                 }
-            })
-            .catch(error => {
-                console.error("Error!!", error);
-            });
-
+            }catch(error){
+                console.error('Error fetching data(HotCoin):',error);
+            }
+        };
+        fetchData();
     }
     const handleMyPage = () => {
         movePage("/mypage/editProfile")
@@ -57,6 +58,9 @@ const MenuBar = () => {
     }
     const handleInvestment = () => {
         movePage("/investment/balance")
+    }
+    const handleBoard = () => {
+        movePage("/board")
     }
 
     return (
@@ -73,7 +77,7 @@ const MenuBar = () => {
                         <a onClick={handleInvestment}>투자 내역</a>
                     </li>
                     <li>
-                        <a>종목 토론 게시판</a>
+                        <a onClick={handleBoard}>종목 토론 게시판</a>
                     </li>
                     <li>
                         <a onClick={handleMarketTrend}>시장 동향</a>

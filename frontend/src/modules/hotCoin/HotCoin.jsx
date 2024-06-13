@@ -10,14 +10,17 @@ const HotCoin = () => {
     const [hotCoin_Data,setHotCoin_Data] = useState([]);
 
     useEffect(()=>{
-        axios.get("https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/getHotCoinList")
-            .then(response => {
-                console.log(response.data.data)
-                setHotCoin_Data(response.data.data)
-            })
-            .catch(error => {
-                console.error("Error!!", error);
-            });
+        const fetchData = async () =>{
+            try{
+                const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getHotCoinList');
+                console.log(response.data);
+                if(response.data.result !== false)
+                    setHotCoin_Data(response.data.data);
+            }catch(error){
+                console.error('Error fetching data(HotCoin):',error);
+            }
+        };
+        fetchData();
     },[])
 
     return (

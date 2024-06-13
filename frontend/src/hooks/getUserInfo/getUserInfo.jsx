@@ -2,7 +2,8 @@ import axios from "axios";
 
 const getUserInfo = async () =>{
     try{
-        const response = await axios.get('https://347fc465-5208-472e-8b0c-c9841b017f75.mock.pstmn.io/rest/getUserInfo',{withCredentials:true});
+        const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getUserInfo');
+        console.log(response)
         return response.data
     }catch(error){
         console.error('Error fetching user Info:',error);
