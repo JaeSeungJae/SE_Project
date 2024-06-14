@@ -18,6 +18,7 @@ const CoinScore = styled.div`
         margin: 10px;
         font-size: 16px;
         font-weight: bold;
+        color : black;
     }
 `;
 
@@ -54,6 +55,7 @@ const NewsContent = styled.div`
         margin: 10px;
         font-size: 16px;
         font-weight: bold;
+        color: black;
     }
 `
 

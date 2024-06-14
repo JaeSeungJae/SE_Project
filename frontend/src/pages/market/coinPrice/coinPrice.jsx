@@ -1,7 +1,8 @@
-import {React, useState} from "react";
+import {React, useEffect, useState} from "react";
 import styled from "styled-components";
 import ApexCharts from "apexcharts";
 import MenuBar from "../../../modules/menuBar/MenuBar";
+import axios from "axios";
 
 const CoinPriceSheet = styled.div`
     //display: flex;
@@ -34,6 +35,7 @@ const PriceGraph = styled.div`
         margin: 10px;
         font-size: 16px;
         font-weight: bold;
+        color : black;
     }
 `;
 
@@ -45,6 +47,7 @@ const CoinList = styled.div`
     margin: 20px;
     padding: 20px;
     overflow-y: auto; // Add scroll if list is too long
+    color: black;
 `;
 
 const CoinListItem = styled.div`
@@ -77,6 +80,7 @@ const HeaderBox = styled.div`
         font-weight: bold;
         margin: 5px 0;
         font-size: 20px;
+        color : black;
     }
 `
 
@@ -94,6 +98,7 @@ const CoinConclusion = styled.div`
         font-weight: bold;
         margin: 5px 10px;
         font-size: 16px;
+        color : black;
     }
 `
 
@@ -172,17 +177,31 @@ const CandleStick = styled.div`
 
 
 const CoinPrice = () => {
-    const coins = [
-        { name: "Coin 1", price: "현재가 1" },
-        { name: "Coin 2", price: "현재가 2" },
-        { name: "Coin 3", price: "현재가 3" },
-        { name: "Coin 4", price: "현재가 4" },
-        { name: "Coin 5", price: "현재가 5" },
-        { name: "Coin 6", price: "현재가 6" },
-        { name: "Coin 7", price: "현재가 7" },
-        { name: "Coin 8", price: "현재가 8" },
-        { name: "Coin 9", price: "현재가 9" },
-    ];
+    const [coins, setCoins] = useState([]);
+    const [selectedCoin, setSelectedCoin] = useState(null);
+    const getCoin = async () => {
+        try {
+            const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getCoinList');
+            console.log(response.data);
+            setCoins(response.data.data);
+        }
+        catch {
+            console.log('error');
+        }
+    }
+    const getCoinInfo = async (coinUid) => {
+        try {
+            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinInfo?coin_uid=${coinUid}`);
+            console.log(response.data);
+            setSelectedCoin(response.data.data);
+        } catch {
+            console.log('error');
+        }
+    }
+
+    useEffect(() => {
+        getCoin();
+    }, [])
 
     const [activeTab, setActiveTab] = useState("buy");
     
@@ -191,9 +210,9 @@ const CoinPrice = () => {
             <MenuBar/>
             <CoinPriceSheet>
                 <HeaderBox>
-                    <span>코인 이름</span>
+                    <span>{selectedCoin.coin_name}</span>
                     <hr />
-                    <span>현재 가격</span>
+                    <span>{selectedCoin.current_unit_price}</span>
                 </HeaderBox>
                 <FlexBox>
                     <LeftContainer>
@@ -228,9 +247,9 @@ const CoinPrice = () => {
                     </LeftContainer>
                     <CoinList>
                         {coins.map((coin, index) => (
-                            <CoinListItem key={index}>
-                                <CoinName>{coin.name}</CoinName>
-                                <CoinPriceContent>{coin.price}</CoinPriceContent>
+                            <CoinListItem key={index} onClick={() => getCoinInfo(coin.coin_uid)}>
+                                <CoinName>{coin.coin_name}</CoinName>
+                                <CoinPriceContent>{coin.current_unit_price}</CoinPriceContent>
                             </CoinListItem>
                         ))}
                     </CoinList>
