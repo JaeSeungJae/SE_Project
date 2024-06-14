@@ -1,0 +1,29 @@
+.container h1{
+    text-align: left;
+}
+
+.board-table{
+    width: 100%;
+}
+
+.board-table td{
+    border-bottom: 1px solid gray;
+    margin-bottom: 5px;
+}
+
+.board-title{
+    width: 60%;
+    text-align: center;
+}
+
+.board-hits{
+    width: 10%;
+}
+
+.board-delete{
+    width: 10%;
+}
+
+.board-author{
+    width: 10%
+}

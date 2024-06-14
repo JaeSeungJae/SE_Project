@@ -1,0 +1,31 @@
+.container h1{
+    text-align: left;
+}
+
+.user-table{
+    width: 100%;
+}
+
+.user-table td{
+    border-bottom: 1px solid gray;
+    margin-bottom: 5px;
+}
+
+.user-id{
+    width: 20%;
+}
+
+.user-pw{
+    width: 20%;
+}
+
+.user-delete{
+    width: 20%;
+}
+
+.user-name{
+    width: 20%
+}
+.user-nickname{
+    width: 20%
+}

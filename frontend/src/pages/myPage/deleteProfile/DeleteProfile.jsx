@@ -11,7 +11,7 @@ const cx = className.bind(styles)
 const DeleteProfile = () => {
     const movePage = useNavigate();
 
-    const handleEditProgile = () => {
+    const handleEditProfile = () => {
         movePage("/mypage/editProfile")
     }
 
@@ -39,7 +39,7 @@ const DeleteProfile = () => {
             <MenuBar />
             <div className={cx("container")}>
                 <div className={cx("button-container")}>
-                    <button onClick={handleEditProgile} style={{ marginLeft: "10px" }}>정보 수정</button>
+                    <button onClick={handleEditProfile} style={{ marginLeft: "10px" }}>정보 수정</button>
                     <button style={{ backgroundColor: "green" }}>회원 탈퇴</button>
                 </div>
                 <form className={cx("login-form")} onSubmit={submitDelete}>

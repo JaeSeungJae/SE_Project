@@ -19,6 +19,11 @@ const Balance = () => {
 
     const [rechargeWon, setRechargeWon] = useState();
 
+    const floorToDecimal = (num, decimalPlaces) => {
+        const factor = Math.pow(10, decimalPlaces);
+        return Math.floor(num * factor) / factor;
+      };
+
 
     /**getMyKRW & getMyCoin */
     useEffect(() => {
@@ -61,13 +66,19 @@ const Balance = () => {
     }, [coinData]);
 
     useEffect(() => {
-        const gainLossCal = coinData.reduce((acc, item) => acc + item.gain_loss_amount, 0);
+        const gainLossCal = coinData.reduce((acc, item) => acc + parseInt(item.gain_loss_amount), 0);
         setTotalGainLoss(gainLossCal);
     }, [coinData]);
 
     useEffect(() => {
-        const gainLossPercentCal = (totalGainLoss / totalPurchase);
-        setTotalValuationRate(gainLossPercentCal.toFixed(4))
+        console.log("totalgainloss : "+totalGainLoss)
+        console.log("totalPurchase : "+totalPurchase)
+        if (totalGainLoss !== 0 || totalPurchase !== 0) {
+            const gainLossPercentCal = (totalGainLoss / totalPurchase)*100;
+            setTotalValuationRate(floorToDecimal(gainLossPercentCal,2));
+        }else{
+            setTotalValuation(0);
+        }
     }, [totalGainLoss, totalPurchase])
 
     const [isOpen, setIsOpen] = useState(false);
@@ -137,27 +148,27 @@ const Balance = () => {
                 <div className={cx("balance")}>
                     <div className={cx("balance-format")}>
                         <a>보유 예치금</a>
-                        <a style={{ textAlign: "right" }}>{balanceWon} KRW</a>
+                        <a style={{ textAlign: "right" }}>{floorToDecimal(balanceWon,1).toLocaleString()} KRW</a>
                     </div>
                     <div className={cx("balance-format")}>
                         <a>총 보유자산</a>
-                        <a style={{ textAlign: "right" }}>{balanceTotal} KRW</a>
+                        <a style={{ textAlign: "right" }}>{floorToDecimal(balanceTotal,1).toLocaleString()} KRW</a>
                     </div>
                 </div>
                 <div className={cx("balance-detail")}>
                     <div className={cx("balance-format")}>
                         <a>총매수금액</a>
-                        <a style={{ textAlign: "right" }}>{totalPurchase} KRW</a>
+                        <a style={{ textAlign: "right" }}>{floorToDecimal(totalPurchase,1).toLocaleString()} KRW</a>
                     </div>
                     <div className={cx("balance-format")}>
                         <a>총평가손익</a>
                         <a style={{ textAlign: "right" }} className={cx("color-format", { positive: totalGainLoss > 0, negative: totalGainLoss < 0 })}>
-                            {totalGainLoss > 0 ? `+${totalGainLoss}` : `${totalGainLoss}`} KRW
+                            {totalGainLoss > 0 ? `+${floorToDecimal(totalGainLoss,1).toLocaleString()}` : `${floorToDecimal(totalGainLoss,1).toLocaleString()}`} KRW
                         </a>
                     </div>
                     <div className={cx("balance-format")}>
                         <a>총평가금액</a>
-                        <a style={{ textAlign: "right" }}>{totalValuation} KRW</a>
+                        <a style={{ textAlign: "right" }}>{floorToDecimal(totalValuation,1).toLocaleString} KRW</a>
                     </div>
                     <div className={cx("balance-format")}>
                         <a>총평가수익률</a>
@@ -200,23 +211,23 @@ const Balance = () => {
                                             <div className={cx("coin-symbol")}>{coin.coin_symbol}</div>
                                         </td>
                                         <td className={cx("column-format")}>
-                                            <div>{coin.count}</div>
+                                            <div>{parseFloat(coin.count).toLocaleString()}</div>
                                         </td>
                                         <td className={cx("column-format")}>
-                                            <div>{coin.avg_unit_price.toLocaleString()}</div>
+                                            <div>{parseFloat(coin.avg_unit_price).toLocaleString()}</div>
                                         </td>
                                         <td className={cx("column-format")}>
-                                            <div>{coin.current_unit_price.toLocaleString()}</div>
+                                            <div>{parseFloat(coin.current_unit_price).toLocaleString()}</div>
                                         </td>
                                         <td className={cx("column-format")}>
-                                            <div>{coin.eval_price.toLocaleString()}</div>
+                                            <div>{parseFloat(coin.eval_price).toLocaleString()}</div>
                                         </td>
                                         <td className={cx("column-format")}>
                                             <div className={cx("color-format", { positive: coin.gain_loss_percent > 0, negative: coin.gain_loss_percent < 0 })}>
                                                 {coin.gain_loss_percent > 0 ? `+${coin.gain_loss_percent}` : `${coin.gain_loss_percent}`} %
                                             </div>
                                             <div style={{ fontSize: "10px" }} className={cx("color-format", { positive: coin.gain_loss_amount > 0, negative: coin.gain_loss_amount < 0 })}>
-                                                {coin.gain_loss_amount.toLocaleString()}
+                                                {parseInt(coin.gain_loss_amount).toLocaleString()}
                                             </div>
                                         </td>
                                     </tr>
