@@ -336,7 +336,7 @@ public class CoinController {
             return jo.toString();
         }
         try {
-            int result = coinModel.sellCoin( ((User)hs.getAttribute("User")).getUid(),(int)body.get("coin_uid"), (double)body.get("sell_amount"));
+            int result = coinModel.sellCoin( ((User)hs.getAttribute("User")).getUid(),(int)body.get("coin_uid"), (double)body.get("sell_count"));
             if(result == 0) {
                 jo.addProperty("result", "failed");
                 jo.addProperty("reason", "not enough coins");
