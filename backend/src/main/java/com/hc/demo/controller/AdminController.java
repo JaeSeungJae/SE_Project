@@ -44,6 +44,7 @@ public class AdminController {
                 for (Map<String,Object> user_info : Users) {
 
                     JsonObject item = new JsonObject();
+                    item.addProperty("uid", user_info.get("uid").toString());
                     item.addProperty("id", user_info.get("id").toString());
                     item.addProperty("pw", user_info.get("pw").toString());
                     item.addProperty("name", user_info.get("name").toString());
