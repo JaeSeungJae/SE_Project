@@ -13,8 +13,13 @@ import BoardDetail from './pages/market/board/boardDetail';
 import BoardWrite from './pages/market/board/boardWrite';
 import BoardModify from './pages/market/board/boardModify';
 
+import UserManage from './pages/adminPage/userManage/UserManage';
+import BoardManage from './pages/adminPage/boardManage/BoardManage';
+
+
 import PageCheckAuth from './modules/checkAuth/PageCheckAuth';
 import LoginCheckAuth from './modules/checkAuth/LoginCheckAuth';
+import AdminCheckAuth from './modules/checkAuth/AdminCheckAuth';
 
 function App() {
 
@@ -85,6 +90,16 @@ function App() {
           <PageCheckAuth>
             <Balance />
           </PageCheckAuth>
+        } />
+        <Route path="/adminPage/userManage" element={
+          <AdminCheckAuth>
+            <UserManage />
+          </AdminCheckAuth>
+        } />
+        <Route path="/adminPage/boardManage" element={
+          <AdminCheckAuth>
+            <BoardManage />
+          </AdminCheckAuth>
         } />
       </Routes>
     </BrowserRouter>

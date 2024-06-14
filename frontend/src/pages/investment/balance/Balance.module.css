@@ -12,7 +12,7 @@
 }
 .balance{
     display: grid;
-    grid-template-columns: 30% 30%;
+    grid-template-columns: 50% 50%;
     color: white;
     border-bottom: 1px solid gray;
 }
@@ -28,7 +28,7 @@
 .balance-detail{
     margin-top: 10px;
     display: grid;
-    grid-template-columns: 30% 30%;
+    grid-template-columns: 50% 50%;
     border-bottom: 1px solid gray;
 }
 
