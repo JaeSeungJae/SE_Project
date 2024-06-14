@@ -1,12 +1,16 @@
 import React from "react";
 import MenuBar from "../../../modules/menuBar/MenuBar";
 import styled from "styled-components";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import ApexCharts from "apexcharts";
 
 const CoinScore = styled.div`
     background-color: #D0D0D0;
     border-radius: 10px;
     height: 400px;
-    width: 50%;
+    width: 100%;
     margin: 20px;
     padding: 20px;
     justify-content: center;
@@ -44,7 +48,7 @@ const Container = styled.div`
 const NewsContent = styled.div`
     background-color: #F0F0F0;
     border-radius: 10px;
-    height: 200px;
+    height: 350px;
     margin: 20px 0;
     padding: 20px;
     justify-content: center;
@@ -59,17 +63,116 @@ const NewsContent = styled.div`
     }
 `
 
+const CandleStick = styled.div`
+    background-color: #D0D0D0;
+    border-radius: 10px;
+    height: 350px;
+    margin: 20px 0;
+    width: 100%;
+`
+
 const MarketTrend = () => {
+
+    const [trendNews, setTrendNews] = useState([]);
+    const [brti, setBRTI] = useState({});
+    const [coinDeal, setCoinDeal] = useState([]);
+    const [candleChartData, setCandleChartData] = useState([]);
+
+    const getCoinNews = async () => {
+        try {
+            const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getCoinNews');
+            setTrendNews(response.data.items);
+        } catch {
+            console.log('에러');
+        }
+    }
+
+    const getCoinInfo = async () => {
+        try {
+            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinInfo?coin_uid=127`);
+            console.log(response.data);
+            setBRTI(response.data.data);
+        } catch {
+            console.log('error');
+        }
+    }
+
+    const getCoinDeals = async () => {
+        try {
+            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinDeals?coin_uid=127`);
+            if (response.data.result === 'success') {
+                setCoinDeal(response.data.data);
+            } else {
+                alert(`에러 : ${response.data.reason}`);
+            }
+        } catch {
+            alert('시장 체결랑 조회 오류');
+        }
+    }
+    const getCoinPriceInfo = async () => {
+        try {
+            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinPriceInfo?coin_uid=127`);
+            console.log(response.data);
+            const formattedData = response.data.data.map(item => ({
+                x: new Date(item.date),
+                y: [item.opening_price, item.upper_limit_price, item.lower_limit_price, item.closing_price]
+            }))
+            setCandleChartData(formattedData);
+        } catch {
+            console.log('error candlechart');
+        }
+    }
+
+    useEffect(() => {
+        getCoinNews();
+        getCoinInfo();
+        getCoinDeals();
+        getCoinPriceInfo();
+    }, [])
+
+    useEffect(() => {
+        if (candleChartData.length > 0) {
+            const options = {
+                series: [{
+                    data: candleChartData
+                }],
+                chart: {
+                    type: 'candlestick',
+                    height: 350
+                },
+                title: {
+                    text: 'CandleStick Chart',
+                    align: 'left'
+                },
+                xaxis: {
+                    type: 'datetime'
+                },
+                yaxis: {
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            };
+    
+            const chart = new ApexCharts(document.querySelector("#candleChart"), options);
+            chart.render();
+    
+            return () => {
+                chart.destroy();
+            };
+        }
+    }, [candleChartData]);
+
     return (
         <>
             <MenuBar></MenuBar>
             <Container>
                 <FlexBox>
                     <CoinScore>
-                        <span>코인지수 1</span>
-                    </CoinScore>
-                    <CoinScore>
-                        <span>코인지수 2</span>
+                        <span>코인지수</span>
+                        <CandleStick id="candleChart">
+                                
+                        </CandleStick>
                     </CoinScore>
                 </FlexBox>
                 <div>
@@ -79,21 +182,16 @@ const MarketTrend = () => {
                 </div>
                 <div>
                     <News>
-                        <NewsContent>
-                        <span style={{textAlign: 'left', display: 'block', 
-                            fontWeight: 'bold', fontSize: '16px'
-                        }}>뉴스 1</span>
-                        </NewsContent>
-                        <NewsContent>
-                        <span style={{textAlign: 'left', display: 'block', 
-                            fontWeight: 'bold', fontSize: '16px'
-                        }}>뉴스 2</span>
-                        </NewsContent>
-                        <NewsContent>
-                        <span style={{textAlign: 'left', display: 'block',
-                            fontWeight: 'bold', fontSize: '16px'
-                        }}>뉴스 3</span>
-                        </NewsContent>
+                        {trendNews.map((news, index) => (
+                            <NewsContent key={index}>
+                                <span style={{textAlign: 'left', display: 'block',
+                                    fontWeight: 'bold', fontSize: '24px'
+                                }}>{news.title}</span>
+                                <span style={{fontSize: '16px'}}>{news.description}</span>
+                                <span>링크 : {news.link}</span>
+                                <span>원본 링크 :{news.originallink}</span>
+                            </NewsContent>
+                        ))}
                     </News>
                 </div>
             </Container>

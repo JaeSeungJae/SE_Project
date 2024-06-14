@@ -94,6 +94,10 @@ const BoardModify = () => {
         }
     }
 
+    useEffect(()=> {
+        console.log(uid);
+    }, [])
+
     return (
         <>
             <BoardList>
@@ -112,7 +116,7 @@ const BoardModify = () => {
                         onChange={(e) => setContent(e.target.value)} />
                     </FlexBox>
                 </BoardSection>
-                <SubmitButton onClick={() => updateArticle(uid, title, content)}>수정</SubmitButton>
+                <SubmitButton onClick={() => updateArticle(parseInt(uid), title, content)}>수정</SubmitButton>
             </BoardList>
         </>
     );

@@ -100,6 +100,7 @@ const Board = () => {
     const getBoardArticleList = async () => {
         try {
             const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getBoardArticleList?board_uid=1`);
+            console.log('response data:' , response.data);
             setBoardContents(response.data.data);
         } catch {
             alert('게시판 내용 가져오기 에러');
