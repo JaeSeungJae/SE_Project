@@ -3,7 +3,6 @@ import className from "classnames/bind"
 import styles from "./MenuBar.module.css"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {getUserInfo} from "../../hooks/getUserInfo/getUserInfo";
 
 const cx = className.bind(styles)
 const MenuBar = () => {
@@ -11,27 +10,6 @@ const MenuBar = () => {
     const handleMainPage = () => {
         movePage("/mainpage")
     }
-
-    const [isAuth, setIsAuth] = useState(null);
-/*
-    useEffect(()=>{
-        const checkAuth = async () =>{
-            const userInfo = await getUserInfo();
-            
-            setIsAuth(userInfo.logged);
-        };
-        checkAuth();
-    },[]);
-
-    /*
-    useEffect(()=>{
-        if (isAuth === false){
-            alert("로그인 후 이용하시길 바랍니다.")
-            movePage("/login")
-        }
-    },[isAuth])*/
-
-
     const handleLogOut = () => {
         const fetchData = async () =>{
             try{
