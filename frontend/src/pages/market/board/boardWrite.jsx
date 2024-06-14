@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const BoardList = styled.div`
     background-color: #D0D0D0;
@@ -69,20 +71,44 @@ const SubmitButton = styled.button`
 
 const BoardWrite = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const writeArticle = async (title, content) => {
+        try {
+            const response = await axios.post(`http://bitcoin-kw.namisnt.com:8082/rest/writeArticle`, {
+                board_uid: 1,
+                title: title,
+                content: content
+            });
+            if (response.data.result === 'success') {
+                alert('게시글이 등록되었습니다.');
+                navigate('/board');
+            } else {
+                alert(`게시글 등록 실패: ${response.data.reason}`);
+            }
+        } catch {
+            alert('에러 발생');
+        }
+    }
     return (
         <>
             <BoardList>
                 <BoardSection>
                     <FlexBox>
                         <Label>게시글 제목</Label>
-                        <Input type="text" placeholder="게시글 제목 작성" />
+                        <Input type="text" placeholder="게시글 제목 작성"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)} />
                     </FlexBox>
                     <FlexBox>
                         <Label>게시글 내용</Label>
-                        <TextArea placeholder="게시글 내용 작성" />
+                        <TextArea placeholder="게시글 내용 작성" 
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}/>
                     </FlexBox>
                 </BoardSection>
-                <SubmitButton onClick={()=>navigate('/board')}>등록</SubmitButton>
+                <SubmitButton onClick={() => writeArticle(title, content)}>등록</SubmitButton>
                 {/* 추후 navigate('/board')를 api로 */}
             </BoardList>
         </>

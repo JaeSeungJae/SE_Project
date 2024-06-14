@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const BoardList = styled.div`
     background-color: #D0D0D0;
@@ -69,21 +72,47 @@ const SubmitButton = styled.button`
 
 const BoardModify = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const uid = location.state.article_uid;
+    const updateArticle = async (uid, title, content) => {
+        try {
+            const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/updateArticle', {
+                article_uid: uid,
+                title: title,
+                content: content,
+            });
+            if (response.data.result === 'success') {
+                alert('게시글이 수정되었습니다.');
+                navigate('/board');
+            } else {
+                alert(`게시글 수정 실패: ${response.data.reason}`);
+            }
+        } catch {
+            alert('에러 발생');
+        }
+    }
+
     return (
         <>
             <BoardList>
                 <BoardSection>
                     <FlexBox>
                         <Label>게시글 제목</Label>
-                        <Input type="text" placeholder="기존 게시글 제목 수정" />
+                        <Input 
+                        type="text" placeholder="기존 게시글 제목 수정"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)} />
                     </FlexBox>
                     <FlexBox>
                         <Label>게시글 내용</Label>
-                        <TextArea placeholder="기존 게시글 내용 수정" />
+                        <TextArea placeholder="기존 게시글 내용 수정"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)} />
                     </FlexBox>
                 </BoardSection>
-                <SubmitButton onClick={()=>navigate('/board')}>수정</SubmitButton>
-                {/* 추후 navigate('/board')를 api로 */}
+                <SubmitButton onClick={() => updateArticle(uid, title, content)}>수정</SubmitButton>
             </BoardList>
         </>
     );
