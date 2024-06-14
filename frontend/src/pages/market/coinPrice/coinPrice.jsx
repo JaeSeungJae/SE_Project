@@ -178,7 +178,14 @@ const CandleStick = styled.div`
 
 const CoinPrice = () => {
     const [coins, setCoins] = useState([]);
-    const [selectedCoin, setSelectedCoin] = useState(null);
+    const [selectedCoin, setSelectedCoin] = useState('');
+    const [orderAmount, setOrderAmount] = useState('');
+    const [orderCount, setOrderCount] = useState('');
+    const [coinDeal, setCoinDeal] = useState([]);
+    const [activeTab, setActiveTab] = useState("buy");
+    const [candleChartData, setCandleChartData] = useState([]);
+    const [KRW, setKRW] = useState(0);
+
     const getCoin = async () => {
         try {
             const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getCoinList');
@@ -198,27 +205,135 @@ const CoinPrice = () => {
             console.log('error');
         }
     }
+    const getCoinPriceInfo = async (coinUid) => {
+        try {
+            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinPriceInfo?coin_uid=${coinUid}`);
+            console.log(response.data);
+            const formattedData = response.data.data.map(item => ({
+                x: new Date(item.date),
+                y: [item.opening_price, item.upper_limit_price, item.lower_limit_price, item.closing_price]
+            }))
+            setCandleChartData(formattedData);
+        } catch {
+            console.log('error candlechart');
+        }
+    }
+    const handleBuyCoin = async (coinUid, priceAmount) => {
+        try {
+            const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/buyCoin', {
+                coin_uid: coinUid,
+                price_amount: priceAmount
+            });
+            console.log(response.data);
+            if (response.data.result === 'success') {
+                alert('매수 주문이 성공적으로 접수되었습니다.');
+            } else {
+                alert(`매수 주문 실패: ${response.data.reason}`);
+            }
+        } catch (error) {
+            console.log('error', error);
+            alert('매수 주문 중 오류가 발생했습니다.');
+        }
+    }
+    const handleSellCoin = async (coinUid, sellCount) => {
+        try {
+            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/sellCoin?coin_uid=${coinUid}&sell_count=${sellCount}`);
+            console.log(response.data);
+            if (response.data.result === 'success') {
+                alert('매도 주문이 성공적으로 접수되었습니다.');
+            } else {
+                alert(`매도 주문 실패: ${response.data.reason}`);
+            }
+        } catch (error) {
+            console.log('error', error);
+            alert('매도 주문 중 오류가 발생했습니다.');
+        }
+    }
+
+    const getMyKRW = async () => {
+        try {
+            const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getMyKRW');
+            setKRW(response.data.amount);
+        } catch {
+            alert('잔고 확인 에러');
+        }  
+    }
+
+    const getCoinDeals = async (coinUid) => {
+        try {
+            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinDeals?coin_uid=${coinUid}`);
+            if (response.data.result === 'success') {
+                setCoinDeal(response.data.data);
+            } else {
+                alert(`에러 : ${response.data.reason}`);
+            }
+        } catch {
+            alert('시장 체결랑 조회 오류');
+        }
+    }
+
+    const handleCoinClick = (coinUid) => {
+        getCoinInfo(coinUid);
+        getCoinPriceInfo(coinUid);
+        getCoinDeals(coinUid);
+    }
 
     useEffect(() => {
         getCoin();
+        getMyKRW();
     }, [])
 
-    const [activeTab, setActiveTab] = useState("buy");
+    useEffect(() => {
+        getMyKRW();
+    })
+
+    useEffect(() => {
+        if (candleChartData.length > 0) {
+            const options = {
+                series: [{
+                    data: candleChartData
+                }],
+                chart: {
+                    type: 'candlestick',
+                    height: 350
+                },
+                title: {
+                    text: 'CandleStick Chart',
+                    align: 'left'
+                },
+                xaxis: {
+                    type: 'datetime'
+                },
+                yaxis: {
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            };
+    
+            const chart = new ApexCharts(document.querySelector("#candleChart"), options);
+            chart.render();
+    
+            return () => {
+                chart.destroy();
+            };
+        }
+    }, [candleChartData]);
     
     return (
         <>
             <MenuBar/>
             <CoinPriceSheet>
                 <HeaderBox>
-                    <span>{selectedCoin.coin_name}</span>
+                    <span style={{fontWeight: 'bold'}}>{selectedCoin.coin_name}</span>
                     <hr />
-                    <span>{selectedCoin.current_unit_price}</span>
+                    <span>₩ {selectedCoin.current_unit_price}</span>
                 </HeaderBox>
                 <FlexBox>
                     <LeftContainer>
                         <PriceGraph>
                             <span>시세 그래프</span>
-                            <CandleStick>
+                            <CandleStick id="candleChart">
                                 
                             </CandleStick>
                         </PriceGraph>
@@ -235,19 +350,52 @@ const CoinPrice = () => {
                                 </Tabs>
                                 <FormSection>
                                     <span>주문 가능</span>
-                                    <span>현재 예치금 (KWR)</span>
+                                    <span>{KRW}원</span>
                                 </FormSection>
-                                <FormSection>
-                                    <span>주문 총액(KWR)</span>
-                                    <Input type="text" placeholder="0" />
-                                </FormSection>
-                                <Button>{activeTab === "buy" ? "매수" : "매도"}</Button>
+                                {activeTab === "buy" ? (
+                                    <FormSection>
+                                        <span>주문 총액(KWR)</span>
+                                        <Input
+                                            type="text"
+                                            placeholder="0"
+                                            value={orderAmount}
+                                            onChange={(e) => setOrderAmount(e.target.value)}
+                                        />
+                                    </FormSection>
+                                ) : (
+                                    <FormSection>
+                                        <span>주문 수량</span>
+                                        <Input
+                                            type="text"
+                                            placeholder="0"
+                                            value={orderCount}
+                                            onChange={(e) => setOrderCount(e.target.value)}
+                                        />
+                                    </FormSection>
+                                )}
+                                <Button
+                                    onClick={() => {
+                                        if (selectedCoin) {
+                                            if (activeTab === "buy") {
+                                                handleBuyCoin(parseInt(selectedCoin.coin_uid), parseFloat(orderAmount));
+                                            } else {
+                                                handleSellCoin(parseInt(selectedCoin.coin_uid), parseFloat(orderCount));
+                                            }
+                                        } else {
+                                            alert('코인을 선택하세요.');
+                                        }
+                                    }}
+                                >
+                                    {activeTab === "buy" ? "매수" : "매도"}
+                                </Button>
                             </OrderFormContainer>
                         </PriceGraph>
                     </LeftContainer>
                     <CoinList>
                         {coins.map((coin, index) => (
-                            <CoinListItem key={index} onClick={() => getCoinInfo(coin.coin_uid)}>
+                            <CoinListItem key={index} onClick={() => 
+                                handleCoinClick(coin.coin_uid)
+                            }>
                                 <CoinName>{coin.coin_name}</CoinName>
                                 <CoinPriceContent>{coin.current_unit_price}</CoinPriceContent>
                             </CoinListItem>
@@ -262,6 +410,14 @@ const CoinPrice = () => {
                         <span>체결량</span>
                         <span>체결금액</span>
                     </ConclusionSection>
+                    {coinDeal.map((deal, index) => (
+                        <ConclusionSection key={index}>
+                            <span>{new Date(deal.contracted_time).toLocaleString()}</span>
+                            <span>{deal.unit_price}원</span>
+                            <span>{deal.unit_count}개</span>
+                            <span>{deal.unit_price * deal.unit_count}원</span>
+                        </ConclusionSection>
+                    ))}
                 </CoinConclusion>
             </CoinPriceSheet>
         </>
@@ -269,3 +425,4 @@ const CoinPrice = () => {
 };
 
 export default CoinPrice;
+

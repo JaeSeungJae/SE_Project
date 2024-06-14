@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 
 const BoardList = styled.div`
     background-color: #D0D0D0;
@@ -13,6 +16,7 @@ const BoardList = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    color: black;
 `;
 
 const BoardSection = styled.div`
@@ -82,16 +86,46 @@ const ListButton = styled.button`
 
 
 const BoardDetail = () => {
-    const { id } = useParams();
+    const location = useLocation();
+    const id = location.state.id;
     const navigate = useNavigate();
+    const [article, setArticle] = useState({});
+    const [comments, setComments] = useState([]);
+
+    const getBoardArticle = async () => {
+        const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getBoardArticle?article_uid=${id}`)
+        setArticle(response.data.article);
+        setComments(response.data.comments);
+    }
+
+    const deleteArticle = async (uid) => {
+        try {
+            const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/deleteArticle', {
+                article_uid: uid
+            });
+            if (response.data.result === 'success') {
+                alert('게시글이 삭제되었습니다.');
+                navigate('/board');
+            } else {
+                alert(`게시글 삭제 실패: ${response.data.reason}`);
+            }
+        } catch {
+            alert('에러 발생');
+        }
+    }
+
+    useEffect(() => {
+        getBoardArticle();
+    }, [])
+
     return (
         <>
             <BoardList>
                 <BoardSection height={50}>
                     <FlexBox>
-                        <StyledSpan>게시글 제목</StyledSpan>
-                        <StyledSpan>작성자</StyledSpan>
-                        <StyledSpan>조회수</StyledSpan>
+                        <StyledSpan>제목 : {article.title}</StyledSpan>
+                        <StyledSpan>작성자 : {article.user_nickname}</StyledSpan>
+                        <StyledSpan>조회수 : {article.hits}</StyledSpan>
                     </FlexBox>
                 </BoardSection>
                 <BoardSection height={300}>
@@ -99,10 +133,16 @@ const BoardDetail = () => {
                         <span style={{ fontWeight: 'bold', fontSize: '20px' }}>게시글 내용</span>
                         <div>
                             <span style={{ cursor: 'pointer', marginRight: '10px' }} 
-                            onClick={()=>navigate('/board/modify')}>수정</span>
-                            <span style={{ cursor: 'pointer' }}>삭제</span>
+                            onClick={()=>navigate('/board/modify', {
+                                state: {
+                                    article_uid: article.article_uid
+                                }
+                            })}>수정</span>
+                            <span style={{ cursor: 'pointer' }}
+                            onClick={() => {deleteArticle(id)}}>삭제</span>
                         </div>
                     </div>
+                    <div style={{marginTop: '40px'}}>{article.content}</div>
                 </BoardSection>
                 <BoardSection height={400}>
                     <FlexBox>
@@ -112,13 +152,14 @@ const BoardDetail = () => {
                         <span style={{ cursor: 'pointer' }}>삭제</span>
                     </div>
                     </FlexBox>
-                    <CommentBox>
-                        <FlexBox>
-                            <span>댓글 1</span>
-                            <span>댓글 작성자 1</span>
-                            
-                        </FlexBox>
-                    </CommentBox>
+                    {comments.map((comment, index) => (
+                        <CommentBox key={index}>
+                            <FlexBox>
+                                <span>{comment.content}</span>
+                                <span>{comment.user_nickname}</span>
+                            </FlexBox>
+                        </CommentBox>
+                    ))}
                     <CommentInputBox>
                         <CommentInput placeholder="댓글 작성" />
                         <SubmitButton>등록</SubmitButton>

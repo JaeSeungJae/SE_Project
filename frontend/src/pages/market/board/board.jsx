@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import MenuBar from "../../../modules/menuBar/MenuBar";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 
 const BoardList = styled.div`
     background-color: #D0D0D0;
@@ -20,7 +20,7 @@ const BoardList = styled.div`
         margin: 5px 0;
         font-size: 16px;
     }
-`
+`;
 
 const BoardSection = styled.div`
     display: flex;
@@ -29,8 +29,7 @@ const BoardSection = styled.div`
     margin: 10px 0;
     padding: 10px 50px;
     border-radius: 5px;
-    
-`
+`;
 
 const CoinList = styled.div`
     width: 100%;
@@ -39,7 +38,7 @@ const CoinList = styled.div`
     height: 90%;
     margin: 20px;
     padding: 20px;
-    overflow-y: auto; // Add scroll if list is too long
+    overflow-y: auto;
 `;
 
 const CoinListItem = styled.div`
@@ -59,24 +58,11 @@ const CoinPriceContent = styled.span`
     color: #333;
 `;
 
-const contents = [
-    { name: "게시글 제목 1", view: "1" },
-    { name: "게시글 제목 2", view: "2" },
-    { name: "게시글 제목 3", view: "3" },
-    { name: "게시글 제목 4", view: "4" },
-    { name: "게시글 제목 5", view: "5" },
-    { name: "게시글 제목 6", view: "6" },
-    { name: "게시글 제목 7", view: "7" },
-    { name: "게시글 제목 8", view: "8" },
-    { name: "게시글 제목 9", view: "9" },
-];
-
 const Pagination = styled.div`
     display: flex;
     justify-content: center;
     margin: 20px 0;
 `;
-
 
 const PageButton = styled.button`
     margin: 0 5px;
@@ -98,24 +84,38 @@ const Button = styled.button`
     &:hover {
         background-color: #32CD32;
     }
-`
-
+`;
 
 const Board = () => {
-    const [currentPage, SetCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [boardContents, setBoardContents] = useState([]);
     const listPerPage = 5;
-    const indexOfLastItem = currentPage * listPerPage;
-    const indexOfFirstItem = indexOfLastItem - listPerPage;
-    const currentItems = contents.slice(indexOfFirstItem, indexOfLastItem);
     const navigate = useNavigate();
 
-    const totalPages = Math.ceil(contents.length / listPerPage);
+    const totalPages = Math.ceil(boardContents.length / listPerPage);
+    const indexOfLastItem = currentPage * listPerPage;
+    const indexOfFirstItem = indexOfLastItem - listPerPage;
+    const currentItems = boardContents.slice(indexOfFirstItem, indexOfLastItem);
+
+    const getBoardArticleList = async () => {
+        try {
+            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getBoardArticleList?board_uid=1`);
+            setBoardContents(response.data.data);
+        } catch {
+            alert('게시판 내용 가져오기 에러');
+        }
+    };
+
     const handlePrevPage = () => {
-        SetCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    }
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
     const handleNextPage = () => {
-        SetCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    }
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    };
+
+    useEffect(() => {
+        getBoardArticleList();
+    }, []);
 
     return (
         <>
@@ -123,13 +123,17 @@ const Board = () => {
             <BoardList>
                 <BoardSection>
                     <CoinList>
-                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '10px 7px 10px 20px'}}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 7px 10px 20px' }}>
                             <span>게시글 제목</span><span>조회수</span>
                         </div>
                         {currentItems.map((content, index) => (
-                            <CoinListItem key={index} onClick={()=>navigate(`/board/${indexOfLastItem - listPerPage + index + 1}`)}>
-                                <CoinName>{content.name}</CoinName>
-                                <CoinPriceContent>{content.view}</CoinPriceContent>
+                            <CoinListItem key={index} onClick={() => navigate(`/board/${content.article_uid}`, {
+                                state: {
+                                    id: content.article_uid
+                                }
+                            })}>
+                                <CoinName>{content.title}</CoinName>
+                                <CoinPriceContent>{content.hits}</CoinPriceContent>
                             </CoinListItem>
                         ))}
                         <Pagination>
@@ -142,9 +146,10 @@ const Board = () => {
                         </Pagination>
                     </CoinList>
                 </BoardSection>
-                <Button onClick={()=>navigate('/board/write')}>글 작성</Button>
+                <Button onClick={() => navigate('/board/write')}>글 작성</Button>
             </BoardList>
         </>
-    )
-}
-export default Board;  
+    );
+};
+
+export default Board;
