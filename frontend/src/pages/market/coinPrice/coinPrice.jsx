@@ -237,7 +237,10 @@ const CoinPrice = () => {
     }
     const handleSellCoin = async (coinUid, sellCount) => {
         try {
-            const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/sellCoin?coin_uid=${coinUid}&sell_count=${sellCount}`);
+            const response = await axios.post(`http://bitcoin-kw.namisnt.com:8082/rest/sellCoin`, {
+                coin_uid: coinUid,
+                sell_count: sellCount
+            });
             console.log(response.data);
             if (response.data.result === 'success') {
                 alert('매도 주문이 성공적으로 접수되었습니다.');
@@ -287,6 +290,12 @@ const CoinPrice = () => {
         getMyKRW();
     })
 
+    useEffect(() => {
+        if (coins.length > 0) {
+            handleCoinClick(coins[0].coin_uid);
+        }
+    }, [coins]);
+    
     useEffect(() => {
         if (candleChartData.length > 0) {
             const options = {

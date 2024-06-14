@@ -69,7 +69,6 @@ const SubmitButton = styled.button`
     border-radius: 5px;
     padding: 10px 20px;
     cursor: pointer;
-    
 `;
 
 const ListButton = styled.button`
@@ -80,10 +79,9 @@ const ListButton = styled.button`
     border: none;
     cursor: pointer;
     &:hover {
-        background-color: lightgreen; /* Change this color to whatever you prefer for the hover state */
+        background-color: lightgreen;
     }
 `;
-
 
 const BoardDetail = () => {
     const location = useLocation();
@@ -91,15 +89,20 @@ const BoardDetail = () => {
     const navigate = useNavigate();
     const [article, setArticle] = useState({});
     const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const [modifiedComment, setModifiedComment] = useState(false);
+    const [modCommentContent, setModCommentContent] = useState('');
 
     const getBoardArticle = async () => {
         const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getBoardArticle?article_uid=${id}`)
+        console.log('response data:' , response.data);
         setArticle(response.data.article);
         setComments(response.data.comments);
     }
 
     const deleteArticle = async (uid) => {
         try {
+            console.log(uid);
             const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/deleteArticle', {
                 article_uid: uid
             });
@@ -108,6 +111,56 @@ const BoardDetail = () => {
                 navigate('/board');
             } else {
                 alert(`게시글 삭제 실패: ${response.data.reason}`);
+            }
+        } catch {
+            alert('에러 발생');
+        }
+    }
+
+    const writeComment = async (uid, content) => {
+        try {
+            const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/writeComment', {
+                article_uid: uid,
+                content: content,
+            });
+            if (response.data.result === 'success') {
+                alert('댓글이 등록되었습니다.');
+                window.location.reload();
+            } else {
+                alert(`댓글 등록 실패: ${response.data.reason}`);
+            }
+        } catch {
+            alert('에러 발생');
+        }
+    }
+
+    const deleteComment = async (cmt_uid) => {
+        try {
+            const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/deleteComment', {
+                cmt_uid: cmt_uid
+            });
+            if (response.data.result === 'success') {
+                alert('댓글이 삭제되었습니다.');
+                window.location.reload();
+            } else {
+                alert(`댓글 삭제 실패: ${response.data.reason}`);
+            }
+        } catch (error) {
+            alert('댓글 삭제 중 오류가 발생했습니다.');
+        }
+    }
+
+    const modifyComment = async (uid, content) => {
+        try {
+            const response = await axios.post('http://bitcoin-kw.namisnt.com:8082/rest/updateComment', {
+                cmt_uid: uid,
+                content: content
+            })
+            if (response.data.result === 'success') {
+                alert('댓글이 수정되었습니다.');
+                window.location.reload();
+            } else {
+                alert(`댓글 수정 실패: ${response.data.reason}`);
             }
         } catch {
             alert('에러 발생');
@@ -139,7 +192,7 @@ const BoardDetail = () => {
                                 }
                             })}>수정</span>
                             <span style={{ cursor: 'pointer' }}
-                            onClick={() => {deleteArticle(id)}}>삭제</span>
+                            onClick={() => {deleteArticle(parseInt(id))}}>삭제</span>
                         </div>
                     </div>
                     <div style={{marginTop: '40px'}}>{article.content}</div>
@@ -147,22 +200,32 @@ const BoardDetail = () => {
                 <BoardSection height={400}>
                     <FlexBox>
                     <StyledSpan>댓글 목록</StyledSpan>
-                    <div>
-                        <span style={{ cursor: 'pointer', marginRight: '10px' }}>수정</span>
-                        <span style={{ cursor: 'pointer' }}>삭제</span>
-                    </div>
                     </FlexBox>
                     {comments.map((comment, index) => (
+                        <>
                         <CommentBox key={index}>
                             <FlexBox>
+                                <span>{comment.user_nickname} : </span>
                                 <span>{comment.content}</span>
-                                <span>{comment.user_nickname}</span>
+                                <div>
+                                    <span style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => setModifiedComment((prev) => !prev)}>수정</span>
+                                    <span style={{ cursor: 'pointer' }} onClick={() => deleteComment(parseInt(comment.comment_uid))}>삭제</span>
+                                </div>
                             </FlexBox>
                         </CommentBox>
+                        {modifiedComment && <CommentInputBox>
+                            <CommentInput placeholder="댓글 수정"
+                            value={modCommentContent}
+                            onChange={(e) => setModCommentContent(e.target.value)} />
+                            <SubmitButton onClick={()=>modifyComment(parseInt(comment.comment_uid), modCommentContent)}>등록</SubmitButton>
+                        </CommentInputBox>}
+                        </>
                     ))}
                     <CommentInputBox>
-                        <CommentInput placeholder="댓글 작성" />
-                        <SubmitButton>등록</SubmitButton>
+                        <CommentInput placeholder="댓글 작성"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)} />
+                        <SubmitButton onClick={()=>writeComment(parseInt(id), newComment)}>등록</SubmitButton>
                     </CommentInputBox>
                 </BoardSection>
                 <ListButton onClick={()=>navigate('/board')}>목록</ListButton>
