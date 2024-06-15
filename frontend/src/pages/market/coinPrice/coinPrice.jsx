@@ -5,7 +5,6 @@ import MenuBar from "../../../modules/menuBar/MenuBar";
 import axios from "axios";
 
 const CoinPriceSheet = styled.div`
-    //display: flex;
     justify-content: space-between;
     width: calc(100% - 40px);
     height: 100%;
@@ -35,7 +34,7 @@ const PriceGraph = styled.div`
         margin: 10px;
         font-size: 16px;
         font-weight: bold;
-        color : black;
+        color: black;
     }
 `;
 
@@ -53,6 +52,7 @@ const CoinList = styled.div`
 const CoinListItem = styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 25px 20px;
     border-bottom: 1px solid #ccc;
 `;
@@ -65,13 +65,25 @@ const CoinPriceContent = styled.span`
     color: #333;
 `;
 
+const StarButton = styled.button`
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: ${props => (props.isFavorite ? "gold" : "gray")};
+    font-size: 20px;
+    margin-left: 10px;
+
+    &:hover {
+        color: gold;
+    }
+`;
+
 const FlexBox = styled.div`
     display: flex;
 `
 const HeaderBox = styled.div`
     width: 100%;
     padding-bottom: 10px;
-    //border-bottom: 1px solid #000;
     margin-bottom: 10px;
 
     span {
@@ -80,7 +92,7 @@ const HeaderBox = styled.div`
         font-weight: bold;
         margin: 5px 0;
         font-size: 20px;
-        color : black;
+        color: black;
     }
 `
 
@@ -98,7 +110,7 @@ const CoinConclusion = styled.div`
         font-weight: bold;
         margin: 5px 10px;
         font-size: 16px;
-        color : black;
+        color: black;
     }
 `
 
@@ -111,8 +123,6 @@ const ConclusionSection = styled.div`
     background-color: #F0F0F0;
     border-radius: 5px;
 `
-
-
 
 const OrderFormContainer = styled.div`
     background-color: #D0D0D0;
@@ -166,7 +176,6 @@ const Button = styled.button`
     margin-top: 10px;
 `;
 
-
 const CandleStick = styled.div`
     background-color: #D0D0D0;
     border-radius: 10px;
@@ -174,7 +183,6 @@ const CandleStick = styled.div`
     margin: 20px 0;
     width: 100%;
 `
-
 
 const CoinPrice = () => {
     const [coins, setCoins] = useState([]);
@@ -185,17 +193,63 @@ const CoinPrice = () => {
     const [activeTab, setActiveTab] = useState("buy");
     const [candleChartData, setCandleChartData] = useState([]);
     const [KRW, setKRW] = useState(0);
+    const [favorites, setFavorites] = useState({});
+
+    const toggleFavorite = async (coinUid) => {
+        try {
+            if (favorites[coinUid]) {
+                // 즐겨찾기 해제 API 호출
+                const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/unsetCoinFavorite?coin_uid=${coinUid}`);
+                if (response.data.result === 'success') {
+                    setFavorites(prevFavorites => ({
+                        ...prevFavorites,
+                        [coinUid]: false
+                    }));
+                } else {
+                    alert('즐겨찾기 해제 실패');
+                }
+            } else {
+                // 즐겨찾기 설정 API 호출
+                const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/setCoinFavorite?coin_uid=${coinUid}`);
+                if (response.data.result === 'success') {
+                    setFavorites(prevFavorites => ({
+                        ...prevFavorites,
+                        [coinUid]: true
+                    }));
+                } else {
+                    alert('즐겨찾기 설정 실패');
+                }
+            }
+        } catch (error) {
+            alert('즐겨찾기 설정 중 오류 발생');
+        }
+    };
 
     const getCoin = async () => {
         try {
             const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getCoinList');
-            console.log(response.data);
+            console.log('코인 정보 : ', response.data.data);
             setCoins(response.data.data);
-        }
-        catch {
-            console.log('error');
+            // 즐겨찾기 상태 초기화
+            const initialFavorites = {};
+            response.data.data.forEach(coin => {
+                if (coin.is_favorite == 0) {
+                    initialFavorites[coin.coin_uid] = false;
+                }
+                else {
+                    initialFavorites[coin.coin_uid] = true;
+                }
+            });
+            console.log(initialFavorites);
+            setFavorites(initialFavorites);
+            if (response.data.data.length > 0) {
+                handleCoinClick(response.data.data[0].coin_uid);
+            }
+        } catch (error) {
+            console.log('error', error);
         }
     }
+    
     const getCoinInfo = async (coinUid) => {
         try {
             const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinInfo?coin_uid=${coinUid}`);
@@ -407,6 +461,15 @@ const CoinPrice = () => {
                             }>
                                 <CoinName>{coin.coin_name}</CoinName>
                                 <CoinPriceContent>{coin.current_unit_price}</CoinPriceContent>
+                                <StarButton
+                                    isFavorite={!!favorites[coin.coin_uid]}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleFavorite(coin.coin_uid);
+                                    }}
+                                >
+                                    ★
+                                </StarButton>
                             </CoinListItem>
                         ))}
                     </CoinList>
@@ -434,4 +497,3 @@ const CoinPrice = () => {
 };
 
 export default CoinPrice;
-
