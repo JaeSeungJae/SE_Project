@@ -1,4 +1,4 @@
-import {React, useEffect, useState} from "react";
+import { React, useEffect, useState } from "react";
 import styled from "styled-components";
 import ApexCharts from "apexcharts";
 import MenuBar from "../../../modules/menuBar/MenuBar";
@@ -147,6 +147,15 @@ const Tab = styled.div`
     color: ${props => (props.active ? "red" : "black")};
     border-bottom: ${props => (props.active ? "2px solid red" : "1px solid black")};
 `;
+const Tab2 = styled.div`
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: ${props => (props.active ? "blue" : "black")};
+    border-bottom: ${props => (props.active ? "2px solid blue" : "1px solid black")};
+`;
 
 const FormSection = styled.div`
     display: flex;
@@ -167,7 +176,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 100%;
     padding: 10px;
-    background-color: red;
+    background-color: green;
     color: white;
     border: none;
     border-radius: 5px;
@@ -249,7 +258,7 @@ const CoinPrice = () => {
             console.log('error', error);
         }
     }
-    
+
     const getCoinInfo = async (coinUid) => {
         try {
             const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinInfo?coin_uid=${coinUid}`);
@@ -314,7 +323,7 @@ const CoinPrice = () => {
             setKRW(response.data.amount);
         } catch {
             alert('잔고 확인 에러');
-        }  
+        }
     }
 
     const getCoinDeals = async (coinUid) => {
@@ -350,7 +359,7 @@ const CoinPrice = () => {
             handleCoinClick(coins[0].coin_uid);
         }
     }, [coins]);
-    
+
     useEffect(() => {
         if (candleChartData.length > 0) {
             const options = {
@@ -385,22 +394,22 @@ const CoinPrice = () => {
                     }
                 }
             };
-    
+
             const chart = new ApexCharts(document.querySelector("#candleChart"), options);
             chart.render();
-    
+
             return () => {
                 chart.destroy();
             };
         }
     }, [candleChartData]);
-    
+
     return (
         <>
-            <MenuBar/>
+            <MenuBar />
             <CoinPriceSheet>
                 <HeaderBox>
-                    <span style={{fontWeight: 'bold'}}>{selectedCoin.coin_name}</span>
+                    <span style={{ fontWeight: 'bold' }}>{selectedCoin.coin_name}</span>
                     <hr />
                     <span>₩ {selectedCoin.current_unit_price}</span>
                 </HeaderBox>
@@ -409,7 +418,7 @@ const CoinPrice = () => {
                         <PriceGraph>
                             <span>시세 그래프</span>
                             <CandleStick id="candleChart">
-                                
+
                             </CandleStick>
                         </PriceGraph>
                         <PriceGraph>
@@ -419,9 +428,9 @@ const CoinPrice = () => {
                                     <Tab active={activeTab === "buy"} onClick={() => setActiveTab("buy")}>
                                         매수
                                     </Tab>
-                                    <Tab active={activeTab === "sell"} onClick={() => setActiveTab("sell")}>
+                                    <Tab2 active={activeTab === "sell"} onClick={() => setActiveTab("sell")}>
                                         매도
-                                    </Tab>
+                                    </Tab2>
                                 </Tabs>
                                 <FormSection>
                                     <span>주문 가능</span>
@@ -468,7 +477,7 @@ const CoinPrice = () => {
                     </LeftContainer>
                     <CoinList>
                         {coins.map((coin, index) => (
-                            <CoinListItem key={index} onClick={() => 
+                            <CoinListItem key={index} onClick={() =>
                                 handleCoinClick(coin.coin_uid)
                             }>
                                 <CoinName>{coin.coin_name}</CoinName>

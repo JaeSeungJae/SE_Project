@@ -30,6 +30,10 @@ public class BoardArticleModel {
         return boardArticleService.getBoardArticleList(board_uid);
     }
 
+    public List<Map<String,Object>> getHotArticles() {
+        return boardArticleService.getHotArticles();
+    }
+
 
     public Article getArticle(int article_uid) {
         return boardArticleService.getArticle(article_uid);

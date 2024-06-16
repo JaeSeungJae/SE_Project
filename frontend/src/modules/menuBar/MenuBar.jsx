@@ -2,10 +2,21 @@ import React, { useEffect, useState } from "react";
 import className from "classnames/bind"
 import styles from "./MenuBar.module.css"
 import { useNavigate } from "react-router-dom";
+import { getUserInfo } from "../../hooks/getUserInfo/getUserInfo";
 import axios from "axios";
 
 const cx = className.bind(styles)
 const MenuBar = () => {
+    const [isAdmin, setIsAdmin] = useState(false)
+    useEffect(() => {
+        const checkAdmin = async () => {
+            const userInfo = await getUserInfo();
+            if(userInfo.data.level === 1)
+                setIsAdmin(true);
+        };
+        checkAdmin();
+    }, [])
+
     const movePage = useNavigate();
     const handleMainPage = () => {
         movePage("/mainpage")
@@ -27,6 +38,9 @@ const MenuBar = () => {
     }
     const handleMyPage = () => {
         movePage("/mypage/editProfile")
+    }
+    const handleAdminPage = () => {
+        movePage("/adminPage/userManage")
     }
     const handleCoinMarket = () => {
         movePage("/coinprice")
@@ -64,6 +78,9 @@ const MenuBar = () => {
             </div>
             <div className={cx("user-fnc")}>
                 <ul>
+                    <li>
+                        {isAdmin && <a onClick={handleAdminPage}>관리자페이지</a>}
+                    </li>
                     <li>
                         <a onClick={handleMyPage}>마이페이지</a>
                     </li>

@@ -54,6 +54,34 @@ public class BoardArticleController {
         }
     }
 
+    @GetMapping("/rest/getHotArticles")
+    @ResponseBody
+    public String getHotArticles() {
+        JsonObject jo = new JsonObject();
+        JsonArray ja = new JsonArray();
+        try {
+            List<Map<String,Object>> articles = boardArticleModel.getHotArticles();
+//            System.out.println(articles);
+            for (Map<String,Object> article : articles) {
+                JsonObject item = new JsonObject();
+                item.addProperty("article_uid", article.get("uid").toString());
+                item.addProperty("title", article.get("title").toString());
+                item.addProperty("user_nickname", article.get("Nickname").toString());
+                item.addProperty("created_date", article.get("created_date").toString());
+                item.addProperty("hits", article.get("hits").toString());
+                ja.add(item);
+            }
+            jo.addProperty("result", "success");
+            jo.add("data", ja);
+            return jo.toString();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            jo.addProperty("result", "failed");
+//            jo.add("data", ja);
+            return jo.toString();
+        }
+    }
+
 
     @PostMapping("/rest/updateArticle")
     public String updateArticle(HttpServletRequest req, @RequestBody HashMap<String,Object> body)

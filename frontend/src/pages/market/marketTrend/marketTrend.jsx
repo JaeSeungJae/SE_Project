@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ApexCharts from "apexcharts";
+import CoinNews from "../../../modules/coinNews/CoinNews"
 
 const CoinScore = styled.div`
     background-color: #D0D0D0;
@@ -27,7 +28,7 @@ const CoinScore = styled.div`
 `;
 
 const News = styled.div`
-    background-color: #D0D0D0;
+    background-color: #FFFFFF;
     border-radius: 10px;
     height: 60%;
     width: calc(100% - 80px);
@@ -153,10 +154,10 @@ const MarketTrend = () => {
                     }
                 }
             };
-    
+
             const chart = new ApexCharts(document.querySelector("#candleChart"), options);
             chart.render();
-    
+
             return () => {
                 chart.destroy();
             };
@@ -171,27 +172,21 @@ const MarketTrend = () => {
                     <CoinScore>
                         <span>코인지수</span>
                         <CandleStick id="candleChart">
-                                
+
                         </CandleStick>
                     </CoinScore>
                 </FlexBox>
                 <div>
-                    <span style={{textAlign: 'left', display: 'block', padding: '0 30px', 
+                    <span style={{
+                        textAlign: 'left', display: 'block', padding: '0 30px',
                         fontWeight: 'bold', fontSize: '20px'
                     }}>뉴스</span>
                 </div>
                 <div>
                     <News>
-                        {trendNews.map((news, index) => (
-                            <NewsContent key={index}>
-                                <span style={{textAlign: 'left', display: 'block',
-                                    fontWeight: 'bold', fontSize: '24px'
-                                }}>{news.title}</span>
-                                <span style={{fontSize: '16px'}}>{news.description}</span>
-                                <span>링크 : {news.link}</span>
-                                <span>원본 링크 :{news.originallink}</span>
-                            </NewsContent>
-                        ))}
+                        <div>
+                            <CoinNews />
+                        </div>
                     </News>
                 </div>
             </Container>

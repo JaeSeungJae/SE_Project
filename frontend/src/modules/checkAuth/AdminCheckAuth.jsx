@@ -13,6 +13,7 @@ const LoginCheckAuth = ({ children }) => {
         if (response.data.logged !== true || response.data.data.level === 0) {
             alert("접근 권한이 없거나 잘못된 정보입니다.");
             movePage('/mainpage');
+            window.location.reload();
         }
       } catch (error) {
         movePage('/adminPage/userManage')

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hc.demo.dao.CoinDao">
+    <insert id="setCoinFavorite">
+        INSERT INTO Favorites (member_uid, coin_uid)
+        VALUES (#{uid}, #{coin_uid})
+    </insert>
+
+    <delete id="unsetCoinFavorite">
+        DELETE
+        FROM
+            Favorites
+        WHERE
+            member_uid = #{uid}
+        AND
+            coin_uid = #{coin_uid}
+    </delete>
+
+    <select id="getCoinList" resultType="HashMap">
+        SELECT
+            c.uid,
+            c.name,
+            c.symbol,
+            ROUND(p.closing_price, 2) AS closing_price,
+            ROUND((p.closing_price - p.opening_price), 2) AS updown_amount,
+            ROUND(((p.closing_price - p.opening_price) / p.opening_price * 100), 2) AS updown_rate,
+            CASE WHEN f.member_uid IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+        FROM
+            Coin c
+        JOIN
+            price_info p ON c.uid = p.coin_uid
+        JOIN (
+            SELECT
+                coin_uid,
+                MAX(standard_time) AS latest_standard_time
+            FROM
+                price_info
+            GROUP BY
+                coin_uid
+        ) lp ON p.coin_uid = lp.coin_uid AND p.standard_time = lp.latest_standard_time
+        LEFT JOIN
+            Favorites f ON c.uid = f.coin_uid AND f.member_uid = #{uid}
+        WHERE
+            c.uid != 127
+    </select>
+
+    <select id="getHotCoinList" resultType="HashMap">
+        SELECT
+            c.uid,
+            c.name,
+            c.symbol,
+            ROUND(p.closing_price, 2) AS closing_price,
+            ROUND((p.closing_price - p.opening_price), 2) AS updown_amount,
+            ROUND(((p.closing_price - p.opening_price) / p.opening_price * 100), 2) AS updown_rate,
+            CASE WHEN f.member_uid IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+        FROM
+            Coin c
+        JOIN
+            price_info p ON c.uid = p.coin_uid
+        JOIN (
+            SELECT
+            coin_uid,
+            MAX(standard_time) AS latest_standard_time
+            FROM
+            price_info
+            GROUP BY
+            coin_uid
+            ) lp ON p.coin_uid = lp.coin_uid AND p.standard_time = lp.latest_standard_time
+        LEFT JOIN
+            Favorites f ON c.uid = f.coin_uid AND f.member_uid = #{uid}
+        WHERE
+            c.uid != 127
+        ORDER BY
+            updown_rate DESC
+        LIMIT 5
+    </select>
+
+    <select id="getCoinInfo" resultType="HashMap">
+        SELECT
+            c.uid,
+            c.name,
+            c.symbol,
+            ROUND(p.closing_price, 2) AS closing_price,
+            ROUND((p.closing_price - p.opening_price), 2) AS updown_amount,
+            ROUND(((p.closing_price - p.opening_price) / p.opening_price * 100), 2) AS updown_rate,
+            CASE WHEN f.member_uid IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+        FROM
+            Coin c
+        JOIN
+            price_info p ON c.uid = p.coin_uid
+        JOIN (
+            SELECT
+            coin_uid,
+            MAX(standard_time) AS latest_standard_time
+            FROM
+            price_info
+            GROUP BY
+            coin_uid
+        ) lp ON p.coin_uid = lp.coin_uid AND p.standard_time = lp.latest_standard_time
+        LEFT JOIN
+            Favorites f ON c.uid = f.coin_uid AND f.member_uid = #{uid}
+        WHERE
+            c.uid = #{coin_uid};
+    </select>
+
+    <select id="getCoinPriceInfo" resultType="HashMap">
+        SELECT
+            standard_time,opening_price, upper_limit_price, lower_limit_price, closing_price
+        FROM
+            price_info
+        WHERE
+            coin_uid = #{coin_uid}
+    </select>
+
+    <update id="depositKRW" parameterType="com.hc.demo.container.User">
+        UPDATE
+            Member
+        SET
+            reserved_KRW = #{reservedKRW}
+        WHERE
+            uid = #{uid}
+    </update>
+
+    <select id="getCoinDeals" resultType="map">
+        SELECT
+            d.coin_uid, c.name, c.symbol,   d.contracted_price, d.contracted_size,  d.contracted_time
+        FROM
+            Deal as d
+        JOIN
+            Coin as c
+        ON
+            d.coin_uid = c.uid
+        WHERE
+            d.coin_uid = #{coin_uid}
+        ORDER BY
+            d.contracted_time
+    </select>
+
+<!--    코인별로 contracted_cost, size 더하고, 최신 closing_price, name, symbol get-->
+    <select id="getMyCoin" resultType="map">
+        SELECT
+            d.coin_uid,
+            SUM(d.contracted_size) AS total_contracted_size,
+            SUM(d.contracted_cost) AS total_contracted_cost,
+            pi.closing_price,
+            c.symbol,
+            c.name
+        FROM
+            Deal d
+        JOIN
+            price_info pi ON d.coin_uid = pi.coin_uid
+        JOIN
+        (
+            SELECT
+                coin_uid,
+                MAX(standard_time) AS max_standard_time
+            FROM
+                price_info
+            GROUP BY
+                coin_uid
+        ) recent_pi ON pi.coin_uid = recent_pi.coin_uid AND pi.standard_time = recent_pi.max_standard_time
+        JOIN
+            Coin c ON d.coin_uid = c.uid
+        WHERE
+            d.member_uid = #{uid}
+        GROUP BY
+            d.coin_uid, pi.closing_price, c.symbol, c.name;
+    </select>
+
+    <select id="getLatestPriceInfo" resultType="double">
+        SELECT
+            closing_price
+        FROM
+            price_info
+        WHERE
+            coin_uid = #{coin_uid}
+        ORDER BY
+            standard_time DESC
+        LIMIT 1;
+    </select>
+
+    <select id="checkMoney" resultType="int">
+        SELECT
+            CASE
+                WHEN reserved_KRW >= #{amount} THEN 1
+                ELSE 0
+            END AS has_enough_balance
+        FROM
+            Member
+        WHERE
+            uid = #{uid};
+    </select>
+
+    <insert id="buyCoin">
+        INSERT INTO Deal (member_uid, coin_uid, contracted_price, contracted_size, contracted_cost)
+        SELECT
+            #{uid},
+            #{coin_uid},
+            latest_price AS contracted_price,
+            #{amount} / latest_price AS contracted_size,
+            #{amount}
+        FROM (
+        SELECT
+            closing_price AS latest_price
+        FROM
+            price_info
+        WHERE
+            coin_uid = #{coin_uid}
+        ORDER BY
+            standard_time DESC
+        LIMIT 1
+        ) AS latest_price_info;
+    </insert>
+
+    <update id="discountKRW">
+        UPDATE Member
+            SET reserved_KRW = reserved_KRW - #{amount}
+        WHERE uid = #{uid};
+    </update>
+
+    <select id="checkCoin" resultType="int">
+        SELECT
+            CASE
+            WHEN COALESCE(SUM(contracted_size), 0) >= #{coin_count} THEN 1
+            ELSE 0
+            END AS can_sell
+        FROM
+            Deal
+        WHERE
+            member_uid = #{uid} AND coin_uid = #{coin_uid};
+    </select>
+
+    <insert id="sellCoin">
+        INSERT INTO Deal (member_uid, coin_uid, contracted_price, contracted_size, contracted_cost)
+        SELECT
+            #{uid},
+            #{coin_uid},
+            -latest_price AS contracted_price,
+            -#{coin_count} AS contracted_size,
+            -#{coin_count} * latest_price AS contracted_cost
+        FROM (
+            SELECT
+                closing_price AS latest_price
+            FROM
+                price_info
+            WHERE
+                coin_uid = #{coin_uid}
+            ORDER BY
+                standard_time DESC
+            LIMIT 1
+        ) AS latest_price_info
+    </insert>
+
+    <update id="addKRW">
+        UPDATE Member
+            SET reserved_KRW = reserved_KRW + (
+        SELECT #{coin_count} * closing_price
+        FROM
+            price_info
+        WHERE
+            coin_uid = #{coin_uid}
+        ORDER BY
+            standard_time DESC
+        LIMIT 1
+        )
+    </update>
+
+</mapper>

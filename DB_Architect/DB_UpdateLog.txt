@@ -1,0 +1,111 @@
+[2024-06-16 Minor Update]
+
+(Revision)
+ERD : 2024061601
+Relational Schema : 2024061101
+
+1. [ERD] revision 명명 착오 수정
+
+끝
+
+---
+
+[2024-06-11 Minor Update]
+
+(Revision)
+ERD : 2024061001
+Relational Schema : 2024061101
+
+1. [Schema] Coin Table에 있는 NAME Column을 name으로 변경
+
+끝
+
+---
+
+[2024-06-10 Major Update]
+
+(Revision)
+ERD : 2024061001
+Relational Schema : 2024061001
+
+1. [ERD] Price Info Entity에 price Attribute의 이름을 opening_price로 변경
+2. [Schema] Coin Table에 있는 Symbol Column의 DataType을 VARCHAR(5)에서 VARCHAR(7)로 변경
+3. [Schema] Coin Table에 있는 Symbol Column에 UNIQUE Index 추가
+4. [Schema] Coin Table에 있는 price Column의 Column명을 opening_price로 변경
+
+끝
+
+---
+
+[2024-06-07 Minor Update]
+
+(Revision)
+ERD : 2024060701
+Relational Schema : 2024060702
+
+1. [Schema] Member Table에 있는 reserved_KRW Column의 DataType을 INTEGER에서 DECIMAL(20, 10)으로 변경
+
+끝
+
+---
+
+[2024-06-07 Major Update]
+
+(Revision)
+ERD : 2024060701
+Relational Schema : 2024060701
+
+1. [ERD] Deal Entity에 Contracted size 추가
+2. [ERD] Member Entity에 level 추가
+3. [ERD] Member Entity에 created_date 추가
+4. [Schema] Member Table에 있는 ID Column을 id로 변경
+5. [Schema] Member Table에 있는 PW Column을 pw로 변경
+6. [Schema] Member Table에 있는 Name Column을 name으로 변경
+7. [Schema] Member Table에 있는 Nickname Column을 nickname으로 변경
+8. [Schema] Member Table에 level Column 추가
+9. [Schema] Member Table에 created_date Column 추가
+10. [Schema] Deal Table에 있는 contracted_price Column의 DataType을 DECIMAL(10, 20)에서 DECIMAL(20, 10)으로 변경
+11. [Schema] Deal Table에 있는 contracted_cost Column의 DataType을 DECIMAL(10, 20)에서 DECIMAL(20, 10)으로 변경
+12. [Schema] Deal Table에 contracted_size Column 추가
+13. [Schema] price_info Table에 있는 upper_limit_price Column의 DataType을 DECIMAL(10, 20)에서 DECIMAL(20, 10)으로 변경
+14. [Schema] price_info Table에 있는 lower_limit_price Column의 DataType을 DECIMAL(10, 20)에서 DECIMAL(20, 10)으로 변경
+15. [Schema] Article Table에 있는 hits Column에 DEFAULT VALUE 0 Condition 추가
+
+끝
+
+---
+
+[2024-05-22 Major Update]
+
+(Revision)
+ERD : 2024052201
+Relational Schema : 2024060701
+
+1. [ERD] 기본 설계 확정
+2. [Schema] 정규화 1차 완료
+
+끝
+
+---
+
+[2024-04-29 Major Update]
+
+(Revision)
+ERD : 2024042902
+Relational Schema : -
+
+1. [ERD] 코인 가격 데이터 구조 변경
+
+끝
+
+---
+
+[2024-04-29 The First Version]
+
+(Revision)
+ERD : 2024042901
+Relational Schema : -
+
+1. [ERD] 기본 설계 제안, 요구사항 분석
+
+끝
