@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
 
 const BoardList = styled.div`
     background-color: #D0D0D0;
@@ -90,12 +89,12 @@ const BoardDetail = () => {
     const [article, setArticle] = useState({});
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
-    const [modifiedComment, setModifiedComment] = useState(false);
+    const [modifiedComment, setModifiedComment] = useState(null);
     const [modCommentContent, setModCommentContent] = useState('');
 
     const getBoardArticle = async () => {
         const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getBoardArticle?article_uid=${id}`)
-        console.log('response data:' , response.data);
+        console.log('response data:', response.data);
         setArticle(response.data.article);
         setComments(response.data.comments);
     }
@@ -186,49 +185,49 @@ const BoardDetail = () => {
                         <span style={{ fontWeight: 'bold', fontSize: '20px' }}>게시글 내용</span>
                         <div>
                             <span style={{ cursor: 'pointer', marginRight: '10px' }} 
-                            onClick={()=>navigate('/board/modify', {
+                            onClick={() => navigate('/board/modify', {
                                 state: {
                                     article_uid: article.article_uid
                                 }
                             })}>수정</span>
                             <span style={{ cursor: 'pointer' }}
-                            onClick={() => {deleteArticle(parseInt(id))}}>삭제</span>
+                            onClick={() => { deleteArticle(parseInt(id)) }}>삭제</span>
                         </div>
                     </div>
-                    <div style={{marginTop: '40px'}}>{article.content}</div>
+                    <div style={{ marginTop: '40px' }}>{article.content}</div>
                 </BoardSection>
                 <BoardSection height={400}>
                     <FlexBox>
-                    <StyledSpan>댓글 목록</StyledSpan>
+                        <StyledSpan>댓글 목록</StyledSpan>
                     </FlexBox>
                     {comments.map((comment, index) => (
-                        <>
-                        <CommentBox key={index}>
-                            <FlexBox>
-                                <span>{comment.user_nickname} : </span>
-                                <span>{comment.content}</span>
-                                <div>
-                                    <span style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => setModifiedComment((prev) => !prev)}>수정</span>
-                                    <span style={{ cursor: 'pointer' }} onClick={() => deleteComment(parseInt(comment.comment_uid))}>삭제</span>
-                                </div>
-                            </FlexBox>
-                        </CommentBox>
-                        {modifiedComment && <CommentInputBox>
-                            <CommentInput placeholder="댓글 수정"
-                            value={modCommentContent}
-                            onChange={(e) => setModCommentContent(e.target.value)} />
-                            <SubmitButton onClick={()=>modifyComment(parseInt(comment.comment_uid), modCommentContent)}>등록</SubmitButton>
-                        </CommentInputBox>}
-                        </>
+                        <React.Fragment key={index}>
+                            <CommentBox>
+                                <FlexBox>
+                                    <span>{comment.user_nickname} : </span>
+                                    <span>{comment.content}</span>
+                                    <div>
+                                        <span style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => setModifiedComment(comment.comment_uid)}>수정</span>
+                                        <span style={{ cursor: 'pointer' }} onClick={() => deleteComment(parseInt(comment.comment_uid))}>삭제</span>
+                                    </div>
+                                </FlexBox>
+                            </CommentBox>
+                            {modifiedComment === comment.comment_uid && <CommentInputBox>
+                                <CommentInput placeholder="댓글 수정"
+                                    value={modCommentContent}
+                                    onChange={(e) => setModCommentContent(e.target.value)} />
+                                <SubmitButton onClick={() => modifyComment(parseInt(comment.comment_uid), modCommentContent)}>등록</SubmitButton>
+                            </CommentInputBox>}
+                        </React.Fragment>
                     ))}
                     <CommentInputBox>
                         <CommentInput placeholder="댓글 작성"
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)} />
-                        <SubmitButton onClick={()=>writeComment(parseInt(id), newComment)}>등록</SubmitButton>
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)} />
+                        <SubmitButton onClick={() => writeComment(parseInt(id), newComment)}>등록</SubmitButton>
                     </CommentInputBox>
                 </BoardSection>
-                <ListButton onClick={()=>navigate('/board')}>목록</ListButton>
+                <ListButton onClick={() => navigate('/board')}>목록</ListButton>
             </BoardList>
         </>
     );
