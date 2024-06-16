@@ -320,7 +320,17 @@ public class CoinController {
             return jo.toString();
         }
         try {
-            int result = coinModel.buyCoin( ((User)hs.getAttribute("User")).getUid(),(int)body.get("coin_uid"), (double)body.get("price_amount"));
+            double double_amount;
+            int int_amount;
+            int result = 0;
+            Object input_amount = body.get("price_amount");
+            if(input_amount instanceof Double) {
+                result = coinModel.buyCoin(((User) hs.getAttribute("User")).getUid(), (int) body.get("coin_uid"), (double) body.get("price_amount"));
+            } else if(input_amount instanceof Integer) {
+                int_amount  =(int)body.get("price_amount");
+                double_amount = int_amount;
+                result = coinModel.buyCoin(((User) hs.getAttribute("User")).getUid(), (int) body.get("coin_uid"), double_amount);
+            }
             if(result == 0) {
                 jo.addProperty("result", "failed");
                 jo.addProperty("reason", "not enough money");
@@ -346,7 +356,17 @@ public class CoinController {
             return jo.toString();
         }
         try {
-            int result = coinModel.sellCoin( ((User)hs.getAttribute("User")).getUid(),(int)body.get("coin_uid"), (double)body.get("sell_count"));
+            double double_amount;
+            int int_amount;
+            int result = 0;
+            Object input_amount = body.get("sell_count");
+            if(input_amount instanceof Double) {
+                result = coinModel.sellCoin( ((User)hs.getAttribute("User")).getUid(),(int)body.get("coin_uid"), (double)body.get("sell_count"));
+            } else if(input_amount instanceof Integer) {
+                int_amount  =(int)body.get("sell_count");
+                double_amount = int_amount;
+                result = coinModel.sellCoin( ((User)hs.getAttribute("User")).getUid(),(int)body.get("coin_uid"), double_amount);
+            }
             if(result == 0) {
                 jo.addProperty("result", "failed");
                 jo.addProperty("reason", "not enough coins");
