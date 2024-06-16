@@ -1,1 +1,4 @@
-# springboot_demo_proj
+# 소프트웨어공학 3조 3차 프로젝트 백엔드 기능 구현
+## 담당자  
+2019202002 이해창(HaechangLee)  
+2019202013 박진우(JiNewPark)
