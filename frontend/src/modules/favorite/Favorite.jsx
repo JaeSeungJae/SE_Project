@@ -8,17 +8,23 @@ const cx = className.bind(styles);
 
 const Favorite = () => {
 
-
     const [coinList, setCoinList] = useState([]);
     useEffect(() => {
         const fetchData = async () =>{
             try{
                 const response = await axios.get('http://bitcoin-kw.namisnt.com:8082/rest/getCoinList');
                 if(response.data.result !== false){
-                    const filter_data = coinList.filter(item => item.is_favorite === "1")
-                    setCoinList(filter_data)
+                    let filter_data = [];
+                    response.data.data.forEach(coin => {
+                        if (coin.is_favorite == 1) {
+                            filter_data = [...filter_data, coin];
+                            
+                        }
+                    })
+                    setCoinList(filter_data);
+                    console.log(response.data);
+                    console.log(filter_data);
                 }
-                console.log(response.data);
             }catch(error){
                 console.error('Error fetching data(Favorites):',error);
             }
