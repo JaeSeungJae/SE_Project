@@ -39,6 +39,7 @@ const Label = styled.label`
     width: 100px;
     text-align: left;
     margin-right: 10px;
+    color: black;
 `;
 
 const Input = styled.input`
