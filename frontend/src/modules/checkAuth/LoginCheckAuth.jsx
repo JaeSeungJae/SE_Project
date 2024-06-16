@@ -12,6 +12,7 @@ const LoginCheckAuth = ({ children }) => {
         console.log(response.data);
         if (response.data.logged === true) {
           movePage('/mainpage')
+          window.location.reload();
         }
       } catch (error) {
         movePage('/login');
