@@ -147,6 +147,15 @@ const Tab = styled.div`
     color: ${props => (props.active ? "red" : "black")};
     border-bottom: ${props => (props.active ? "2px solid red" : "1px solid black")};
 `;
+const Tab2 = styled.div`
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: ${props => (props.active ? "blue" : "black")};
+    border-bottom: ${props => (props.active ? "2px solid blue" : "1px solid black")};
+`;
 
 const FormSection = styled.div`
     display: flex;
@@ -167,7 +176,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 100%;
     padding: 10px;
-    background-color: red;
+    background-color: green;
     color: white;
     border: none;
     border-radius: 5px;
@@ -419,9 +428,9 @@ const CoinPrice = () => {
                                     <Tab active={activeTab === "buy"} onClick={() => setActiveTab("buy")}>
                                         매수
                                     </Tab>
-                                    <Tab active={activeTab === "sell"} onClick={() => setActiveTab("sell")}>
+                                    <Tab2 active={activeTab === "sell"} onClick={() => setActiveTab("sell")}>
                                         매도
-                                    </Tab>
+                                    </Tab2>
                                 </Tabs>
                                 <FormSection>
                                     <span>주문 가능</span>

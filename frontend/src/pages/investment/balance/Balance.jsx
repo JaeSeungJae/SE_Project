@@ -61,7 +61,7 @@ const Balance = () => {
     }, [coinData]);
 
     useEffect(() => {
-        const evalCal = coinData.reduce((acc, item) => acc + (item.count * item.eval_price), 0);
+        const evalCal = coinData.reduce((acc, item) => acc + parseFloat(item.eval_price), 0);
         setTotalValuation(evalCal);
     }, [coinData]);
 
@@ -168,7 +168,7 @@ const Balance = () => {
                     </div>
                     <div className={cx("balance-format")}>
                         <a>총평가금액</a>
-                        <a style={{ textAlign: "right" }}>{floorToDecimal(totalValuation,1).toLocaleString} KRW</a>
+                        <a style={{ textAlign: "right" }}>{floorToDecimal(totalValuation,1).toLocaleString()} KRW</a>
                     </div>
                     <div className={cx("balance-format")}>
                         <a>총평가수익률</a>
