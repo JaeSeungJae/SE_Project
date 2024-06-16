@@ -123,7 +123,17 @@ public class CoinController {
 
         if(hs!=null && hs.getAttribute("Logged") != null && (Boolean)hs.getAttribute("Logged")) {
             User user = (User)hs.getAttribute("User");
-            double modify_KRW = user.getReservedKRW()+(double)body.get("amount");
+            double fordouble;
+            int forint;
+            Object amount = body.get("amount");
+            double modify_KRW=0.0;
+            if(amount instanceof Double)
+                modify_KRW = user.getReservedKRW()+(double)body.get("amount");
+            else if (amount instanceof Integer) {
+                forint = (int)body.get("amount");
+                fordouble = forint;
+                modify_KRW = user.getReservedKRW()+fordouble;
+            }
             user.setReservedKRW(modify_KRW);
             coinModel.depositKRW(user.getUid(), modify_KRW);
             hs.setAttribute("User",user);
