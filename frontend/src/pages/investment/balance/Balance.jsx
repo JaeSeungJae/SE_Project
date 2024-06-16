@@ -168,7 +168,7 @@ const Balance = () => {
                     </div>
                     <div className={cx("balance-format")}>
                         <a>총평가금액</a>
-                        <a style={{ textAlign: "right" }}>{floorToDecimal(totalValuation,1).toLocaleString} KRW</a>
+                        <a style={{ textAlign: "right" }}>{floorToDecimal(totalValuation,1).toLocaleString()} KRW</a>
                     </div>
                     <div className={cx("balance-format")}>
                         <a>총평가수익률</a>
