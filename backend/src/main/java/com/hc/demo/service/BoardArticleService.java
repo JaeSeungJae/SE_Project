@@ -21,6 +21,11 @@ public class BoardArticleService implements BoardArticleDao {
     }
 
     @Override
+    public List<Map<String, Object>> getHotArticles() {
+        return boardArticleDao.getHotArticles();
+    }
+
+    @Override
     public Article getArticle(int article_uid) {
         return boardArticleDao.getArticle(article_uid);
     }

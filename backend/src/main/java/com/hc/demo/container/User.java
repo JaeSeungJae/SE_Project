@@ -37,5 +37,12 @@ public class User {
         return level;
     }
 
+    public double getReservedKRW() {
+        return reservedKRW;
+    }
+
+    public void setReservedKRW(double reservedKRW) {
+        this.reservedKRW = reservedKRW;
+    }
 }
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hc.demo.dao.AdminDao">
+    <select id="getUserList" resultType="map">
+        SELECT
+            uid, id, pw, name, nickname, level, reserved_KRW
+        FROM
+            Member
+        ORDER BY
+            uid DESC
+        Limit 0, 1000
+    </select>
+</mapper>

@@ -24,6 +24,20 @@
         Limit 0, 1000
     </select>
 
+    <select id="getHotArticles" resultType="map">
+        SELECT
+            a.uid, a.title, m.Nickname, a.created_date, a.hits
+        FROM
+            Article as a
+        JOIN
+            Member as m
+        ON
+            a.member_uid = m.uid
+        ORDER BY
+        a.hits DESC
+        Limit 0, 1000
+    </select>
+
     <select id="getArticle" resultType="com.hc.demo.container.Article">
         SELECT
             uid, board_uid, member_uid, hits, title, content,  created_date
