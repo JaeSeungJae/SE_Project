@@ -264,9 +264,10 @@ const CoinPrice = () => {
             const response = await axios.get(`http://bitcoin-kw.namisnt.com:8082/rest/getCoinPriceInfo?coin_uid=${coinUid}`);
             console.log(response.data);
             const formattedData = response.data.data.map(item => ({
-                x: new Date(item.date),
-                y: [item.opening_price, item.upper_limit_price, item.lower_limit_price, item.closing_price]
+                x: new Date(item.date).getTime(),
+                y: [item.opening_price, item.closing_price, item.upper_limit_price, item.lower_limit_price]
             }))
+            console.log(formattedData);
             setCandleChartData(formattedData);
         } catch {
             console.log('error candlechart');
@@ -370,6 +371,17 @@ const CoinPrice = () => {
                 yaxis: {
                     tooltip: {
                         enabled: true
+                    }
+                },
+                plotOptions: {
+                    candlestick: {
+                      colors: {
+                        upward: '#EF403C',
+                        downward: '#00B746'
+                      },
+                      wick: {
+                        useFillColor: true
+                      }
                     }
                 }
             };
