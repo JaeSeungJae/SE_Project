@@ -11,11 +11,11 @@
     <td><img src="https://github.com/JaeSeungJae.png" width="100px" /></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/JungSungYeob">이해창</a>
+    <td align="center"><a href="https://github.com/HaechangLee">이해창</a>
     </td>
-    <td align="center"><a href="https://github.com/kyeongjeong">박진우</a>
+    <td align="center"><a href="https://github.com/JiNewPark">박진우</a>
     </td>
-    <td align="center"><a href="https://github.com/Kim-Min-Gyeong">김노산</a>
+    <td align="center"><a href="https://github.com/ns0416">김노산</a>
     </td>
     <td align="center"><a href="https://github.com/JungSungYeob">정성엽</a>
     </td>
