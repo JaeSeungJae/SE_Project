@@ -61,7 +61,7 @@ const Balance = () => {
     }, [coinData]);
 
     useEffect(() => {
-        const evalCal = coinData.reduce((acc, item) => acc + (item.count * item.eval_price), 0);
+        const evalCal = coinData.reduce((acc, item) => acc + parseFloat(item.eval_price), 0);
         setTotalValuation(evalCal);
     }, [coinData]);
 
