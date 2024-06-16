@@ -18,6 +18,7 @@ const Favorite = () => {
                     response.data.data.forEach(coin => {
                         if (coin.is_favorite == 1) {
                             filter_data = [...filter_data, coin];
+                            
                         }
                     })
                     setCoinList(filter_data);
