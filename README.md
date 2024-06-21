@@ -60,3 +60,7 @@
     </td>
   </tr>
 </table>
+
+# 프로젝트 기능 명세서 : https://docs.google.com/spreadsheets/d/1Gs2EGqSU50c83EafldDmNpGg6isHsHCQhK-dVi6h20c/edit#gid=0
+# 프론트엔드 페이지 디자인 : https://www.figma.com/file/I3Lp41Qq9wPGoxy8tTw9dc/SoftwareEngineering?type=design&node-id=0-1&mode=design&t=QFlbkwjWM5WSSat7-0
+# 개발서버 도메인 bitcoin-kw.namisnt.com/
